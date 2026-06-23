@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+
+  /* Lumière Editorials Colors */
+  --color-ny-light: #f4f4f4;
+  --color-ny-gray: #e2e2e2;
+  --color-ny-black: #000000;
+  --color-ny-accent: #3d627b;
+  --color-ny-offwhite: #f9f9f9;
+  --color-secondary: #3d627b;
+  --color-secondary-container: #bce2ff;
+  --color-on-surface-variant: #444748;
+
+  /* Fonts */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display-lg: 'Playfair Display', Georgia, serif;
+  --font-headline-sm: 'Playfair Display', Georgia, serif;
+  --font-body-italic: 'Playfair Display', Georgia, serif;
+  --font-headline-md: 'Playfair Display', Georgia, serif;
+  --font-label-caps: 'Inter', system-ui, sans-serif;
+  --font-ui-medium: 'Inter', system-ui, sans-serif;
+  --font-ui-bold: 'Inter', system-ui, sans-serif;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-toast-slide-in: toast-slide-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-toast-hide: toast-hide 100ms ease-in;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes toast-slide-in {
+    from { transform: translateY(calc(100% + var(--viewport-padding, 16px))); }
+    to { transform: translateY(0); }
+  }
+  @keyframes toast-hide {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+}
+
+:root {
+  --background: #110d1a;
+  --foreground: #f3f1f6;
+  --primary: #a855f7;
+  --border: #2e253a;
+  --accent: #aa3bff;
+
+  --text: var(--foreground);
+  --text-h: var(--foreground);
+  --bg: var(--background);
+  --code-bg: #1f2028;
+  --accent-bg: rgba(170, 59, 255, 0.15);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(47, 48, 58, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+/* Custom Theme Matrix */
+.theme-aura {
+  --background: #110d1a;
+  --foreground: #f3f1f6;
+  --primary: #a855f7;
+  --border: #2e253a;
+  --accent: #aa3bff;
+  --code-bg: #1f2028;
+}
+
+.theme-midnight {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --primary: #2563eb;
+  --border: #27272a;
+  --accent: #3b82f6;
+  --code-bg: #18181b;
+}
+
+.theme-forest {
+  --background: #061c15;
+  --foreground: #ecfdf5;
+  --primary: #10b981;
+  --border: #0d382b;
+  --accent: #34d399;
+  --code-bg: #06241b;
+}
+
+.theme-lumiere {
+  --background: #fcfcfc;
+  --foreground: #000000;
+  --primary: #000000;
+  --border: #000000;
+  --accent: #0055a5;
+
+  --text: var(--foreground);
+  --text-h: var(--foreground);
+  --bg: var(--background);
+  --code-bg: #f4f4f5;
+  --accent-bg: rgba(0, 85, 165, 0.1);
+  --accent-border: rgba(0, 85, 165, 0.4);
+  --social-bg: rgba(0, 0, 0, 0.05);
+  --shadow: none;
+
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --heading: 'Playfair Display', Georgia, serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font-family: var(--sans);
+  color-scheme: light;
+}
+
+/* Typography Utilities */
+@utility text-display-lg {
+  font-family: var(--heading);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+@utility text-display-lg-mobile {
+  font-family: var(--heading);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+@utility text-headline-md {
+  font-family: var(--heading);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@utility text-headline-sm {
+  font-family: var(--heading);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+@utility text-body-italic {
+  font-family: var(--heading);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+@utility text-label-caps {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@utility text-ui-medium {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@utility text-ui-bold {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+@utility text-metadata {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+#social .button-icon {
+  filter: invert(1) brightness(2);
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+.fade-in-view {
+  animation: fadeInView 0.3s ease-out forwards;
+}
+
+@keyframes fadeInView {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
