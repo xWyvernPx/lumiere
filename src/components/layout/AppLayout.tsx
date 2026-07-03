@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Outlet, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   Settings,
@@ -9,10 +9,151 @@ import {
   ChevronDown,
   Palette,
   ArrowLeft,
+  LogOut,
+  Bell,
+  CreditCard,
+  ShieldCheck,
+  Sparkles,
+  ChevronsUpDown,
+  Globe,
+  GraduationCap,
+  Users,
+  Archive,
+  Library,
+  BookOpen,
+  ChevronsLeft,
+  ChevronsRight
 } from "lucide-react";
 import { observer } from "@legendapp/state/react";
 import { themeStore, type ThemeStore } from "../../store/themeStore";
 import { motion, AnimatePresence } from "motion/react";
+
+const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative mt-auto pt-6" ref={menuRef}>
+      {/* Menu popup */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute bottom-full left-0 mb-3 w-64 bg-[var(--background)] border-2 border-[var(--border)] shadow-xl overflow-hidden z-50 text-[var(--foreground)]"
+          >
+             {/* Header */}
+             <div className="p-4 border-b-2 border-[var(--border)] flex items-center gap-3">
+                <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
+                  SJ
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <h4 className="text-sm font-bold text-[var(--foreground)] truncate">Sarah Jenkins</h4>
+                  <p className="text-xs text-[var(--foreground)] opacity-60 truncate">sarah@school.edu</p>
+                </div>
+             </div>
+             {/* Action Items */}
+             <div className="p-2 border-b-2 border-[var(--border)]">
+               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <Sparkles className="w-4 h-4" />
+                 <span>Upgrade to Pro</span>
+               </button>
+             </div>
+             
+             {/* Settings Items */}
+             <div className="p-2 border-b-2 border-[var(--border)]">
+                <div className="px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors flex items-center justify-between font-medium">
+                  <div className="flex items-center gap-3">
+                    <Palette className="w-4 h-4" />
+                    <span>Theme</span>
+                  </div>
+                  <select
+                    className="bg-[var(--background)] border border-[var(--border)] border-opacity-20 text-xs py-1 px-2 cursor-pointer outline-none focus:border-[var(--border)] transition-colors"
+                    value={themeStore.activeTheme.get()}
+                    onChange={(e) => themeStore.activeTheme.set(e.target.value as ThemeStore["activeTheme"])}
+                  >
+                    <option value="lumiere">Lumière</option>
+                    <option value="aura">Aura</option>
+                    <option value="midnight">Midnight</option>
+                    <option value="forest">Forest</option>
+                  </select>
+                </div>
+                <div className="px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors flex items-center justify-between font-medium">
+                  <div className="flex items-center gap-3">
+                    <Globe className="w-4 h-4" />
+                    <span>Language</span>
+                  </div>
+                  <select
+                    className="bg-[var(--background)] border border-[var(--border)] border-opacity-20 text-xs py-1 px-2 cursor-pointer outline-none focus:border-[var(--border)] transition-colors"
+                    defaultValue="fr"
+                  >
+                    <option value="fr">Français</option>
+                    <option value="en">English</option>
+                  </select>
+                </div>
+             </div>
+             
+             <div className="p-2 border-b-2 border-[var(--border)]">
+               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <ShieldCheck className="w-4 h-4" />
+                 <span>Account</span>
+               </button>
+               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <CreditCard className="w-4 h-4" />
+                 <span>Billing</span>
+               </button>
+               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <Bell className="w-4 h-4" />
+                 <span>Notifications</span>
+               </button>
+             </div>
+             
+             <div className="p-2">
+               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <LogOut className="w-4 h-4" />
+                 <span>Log out</span>
+               </button>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`p-2 hover:bg-[var(--code-bg)] transition-colors flex items-center gap-3 border border-transparent hover:border-[var(--border)] hover:border-opacity-20 ${isCollapsed ? 'justify-center w-full' : 'w-full'}`}
+      >
+        <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
+          SJ
+        </div>
+        {!isCollapsed && (
+          <>
+            <div className="flex-1 text-left overflow-hidden">
+              <h4 className="text-sm font-bold text-[var(--foreground)] truncate">
+                Sarah Jenkins
+              </h4>
+              <p className="text-xs text-[var(--foreground)] opacity-60 truncate">
+                sarah@school.edu
+              </p>
+            </div>
+            <ChevronsUpDown className="w-4 h-4 text-[var(--foreground)] opacity-60 shrink-0" />
+          </>
+        )}
+      </button>
+    </div>
+  );
+});
 
 // Header component placed within the layout context or imported
 const Header = observer(function Header({
@@ -63,30 +204,6 @@ const Header = observer(function Header({
       </div>
 
       <div className="flex items-center gap-4 sm:gap-6">
-        <div className="relative flex items-center">
-          <Palette className="w-4 h-4 text-[var(--foreground)] absolute left-3 pointer-events-none" />
-          <select
-            className="appearance-none bg-transparent border border-[var(--border)] border-opacity-20 text-[var(--foreground)] text-sm font-serif italic py-1.5 pl-9 pr-8 cursor-pointer focus:outline-none focus:border-[var(--border)] hover:bg-[var(--code-bg)] transition-colors"
-            value={themeStore.activeTheme.get()}
-            onChange={(e) =>
-              themeStore.activeTheme.set(
-                e.target.value as ThemeStore["activeTheme"],
-              )
-            }
-          >
-            <option value="lumiere">Lumière</option>
-            <option value="aura">Aura</option>
-            <option value="midnight">Midnight</option>
-            <option value="forest">Forest</option>
-          </select>
-          <ChevronDown className="absolute right-2 w-4 h-4 text-[var(--foreground)] pointer-events-none" />
-        </div>
-
-        <button className="hidden sm:flex items-center gap-2 hover:bg-[var(--code-bg)] px-3 py-1.5 transition-colors border border-[var(--border)] border-opacity-20 text-[var(--foreground)] cursor-pointer">
-          <span className="text-sm font-serif italic">Français</span>
-          <ChevronDown className="w-4 h-4" />
-        </button>
-
         <div className="flex items-center gap-4 sm:gap-5 font-bold text-sm tracking-wide">
           <div
             className="flex items-center gap-1 sm:gap-2 cursor-help"
@@ -114,107 +231,147 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
+  const [sidebarWidth, setSidebarWidth] = useState(288); // 288px = w-72
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const navItems = [
-    { to: "/", label: "Practicing" },
-    { to: "/classroom", label: "The Classroom" },
-    { to: "/community", label: "Community Desk" },
-    { to: "/archives", label: "Saved Archives" },
-    { to: "/library", label: "Activities Library" },
+    { to: "/", label: "Practicing", icon: BookOpen },
+    { to: "/classroom", label: "The Classroom", icon: GraduationCap },
+    { to: "/community", label: "Community Desk", icon: Users },
+    { to: "/archives", label: "Saved Archives", icon: Archive },
+    { to: "/library", label: "Activities Library", icon: Library },
   ];
 
   return (
     <aside
-      className={`bg-[var(--background)] w-72 h-full border-r border-[var(--border)] border-opacity-20 flex flex-col transition-transform transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:relative z-30 duration-300 ease-in-out`}
+      style={{ width: isCollapsed ? 80 : sidebarWidth }}
+      className={`bg-[var(--background)] h-full border-r border-[var(--border)] border-opacity-20 flex flex-col transition-all transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:relative z-30 duration-300 ease-in-out shrink-0`}
     >
-      <div className="p-8 border-b-4 border-[var(--border)] flex items-center justify-between shrink-0">
-        <span className="font-serif font-black text-4xl tracking-tight">
-          Lumière.
-        </span>
-        <button
-          className="lg:hidden text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] cursor-pointer"
-          onClick={() => setIsSidebarOpen(false)}
-        >
-          <X className="w-6 h-6" />
-        </button>
+      <div className={`p-8 border-b-4 border-[var(--border)] flex items-center shrink-0 ${isCollapsed ? 'justify-center p-4' : 'justify-between'}`}>
+        {!isCollapsed && (
+          <span className="font-serif font-black text-4xl tracking-tight truncate">
+            Lumière.
+          </span>
+        )}
+        <div className="flex items-center gap-2">
+          <button
+            className="hidden lg:block text-[var(--foreground)] opacity-40 hover:opacity-100 transition-opacity cursor-pointer"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? <ChevronsRight className="w-5 h-5" /> : <ChevronsLeft className="w-5 h-5" />}
+          </button>
+          <button
+            className="lg:hidden text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] cursor-pointer"
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
       </div>
 
-      <nav className="flex-1 px-6 py-8 space-y-6 overflow-y-auto">
+      <nav className={`flex-1 py-8 space-y-6 overflow-y-auto ${isCollapsed ? 'px-2' : 'px-6'}`}>
         <div className="space-y-4">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60 mb-2">
-            Sections
-          </h3>
-          {navItems.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={() => setIsSidebarOpen(false)}
-              activeOptions={{ exact: item.to === "/" }}
-              className="w-full flex items-center gap-4 text-sm tracking-wide group transition-colors cursor-pointer"
-            >
-              {({ isActive }) => (
-                <>
-                  <span
-                    className={`w-1.5 h-1.5 bg-[var(--primary)] rounded-full transition-opacity ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
-                  ></span>
-                  <span
-                    className={
-                      isActive
-                        ? "text-[var(--foreground)] font-bold"
-                        : "text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] font-medium"
-                    }
-                  >
-                    {item.label}
-                  </span>
-                </>
-              )}
-            </Link>
-          ))}
+          {!isCollapsed && (
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60 mb-2 px-4">
+              Sections
+            </h3>
+          )}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setIsSidebarOpen(false)}
+                activeOptions={{ exact: item.to === "/" }}
+                className={`w-full flex items-center text-sm tracking-wide group transition-colors cursor-pointer ${isCollapsed ? 'justify-center p-3 hover:bg-[var(--code-bg)]' : 'gap-4 p-2'}`}
+                title={isCollapsed ? item.label : undefined}
+              >
+                {({ isActive }) => (
+                  <>
+                    <div className="relative flex items-center justify-center shrink-0">
+                      <Icon className={`w-5 h-5 transition-colors ${isActive ? "text-[var(--foreground)]" : "text-[var(--foreground)] opacity-60 group-hover:opacity-100"}`} />
+                      {isCollapsed && isActive && (
+                        <div className="absolute -left-3 w-1 h-5 bg-[var(--primary)] rounded-r-full" />
+                      )}
+                    </div>
+                    
+                    {!isCollapsed && (
+                      <>
+                        <span
+                          className={
+                            isActive
+                              ? "text-[var(--foreground)] font-bold truncate"
+                              : "text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] font-medium truncate"
+                          }
+                        >
+                          {item.label}
+                        </span>
+                        <span
+                          className={`w-1.5 h-1.5 bg-[var(--primary)] rounded-full transition-opacity ml-auto shrink-0 ${isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                        ></span>
+                      </>
+                    )}
+                  </>
+                )}
+              </Link>
+            );
+          })}
         </div>
 
-        <div className="pt-6 border-t border-[var(--border)] border-opacity-20">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">
-              Daily Edition
-            </span>
-            <span className="text-xs font-bold text-[var(--accent)]">
-              20/30 XP
-            </span>
-          </div>
-          <div className="w-full bg-[var(--code-bg)] border border-[var(--border)] border-opacity-20 h-2">
-            <div
-              className="bg-[var(--primary)] h-full"
-              style={{ width: "66%" }}
-            ></div>
-          </div>
-          <p className="font-serif text-sm text-[var(--foreground)] opacity-80 italic mt-3">
-            10 points remaining to maintain your publishing streak.
-          </p>
-        </div>
-      </nav>
-
-      <div className="p-6 border-t border-[var(--border)] border-opacity-20 bg-[var(--background)] mt-auto shrink-0">
-        <div className="flex items-center gap-4">
-          <img
-            src="https://ui-avatars.com/api/?name=Alex+Doe&background=121212&color=fff&rounded=false"
-            alt="User"
-            className="w-10 h-10 grayscale border border-[var(--border)] border-opacity-20"
-          />
-          <div className="flex-1 text-left">
-            <h4 className="text-sm font-bold text-[var(--foreground)]">
-              Alex Doe
-            </h4>
-            <p className="text-xs font-serif text-[var(--foreground)] opacity-80 italic">
-              Intermediate (B1)
+        {!isCollapsed && (
+          <div className="pt-6 border-t border-[var(--border)] border-opacity-20 px-2">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">
+                Daily Edition
+              </span>
+              <span className="text-xs font-bold text-[var(--accent)]">
+                20/30 XP
+              </span>
+            </div>
+            <div className="w-full bg-[var(--code-bg)] border border-[var(--border)] border-opacity-20 h-2">
+              <div
+                className="bg-[var(--primary)] h-full"
+                style={{ width: "66%" }}
+              ></div>
+            </div>
+            <p className="font-serif text-sm text-[var(--foreground)] opacity-80 italic mt-3">
+              10 points remaining to maintain your publishing streak.
             </p>
           </div>
-          <Link
-            to="/auth"
-            className="text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] cursor-pointer"
-          >
-            <Settings className="w-5 h-5" />
-          </Link>
-        </div>
+        )}
+      </nav>
+
+      <div className={`pb-6 mt-auto shrink-0 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        <UserProfileMenu isCollapsed={isCollapsed} />
       </div>
+
+      {/* Resize Handle */}
+      {!isCollapsed && (
+        <div 
+          className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-[var(--accent)] hover:opacity-50 transition-colors z-40 hidden lg:block"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            const startX = e.pageX;
+            const startWidth = sidebarWidth;
+            
+            const onMouseMove = (moveEvent: MouseEvent) => {
+              const newWidth = Math.max(200, Math.min(600, startWidth + moveEvent.pageX - startX));
+              setSidebarWidth(newWidth);
+            };
+            
+            const onMouseUp = () => {
+              document.removeEventListener("mousemove", onMouseMove);
+              document.removeEventListener("mouseup", onMouseUp);
+              document.body.style.cursor = "default";
+            };
+            
+            document.addEventListener("mousemove", onMouseMove);
+            document.addEventListener("mouseup", onMouseUp);
+            document.body.style.cursor = "col-resize";
+          }}
+        ></div>
+      )}
     </aside>
   );
 };

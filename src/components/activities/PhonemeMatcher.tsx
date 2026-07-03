@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Play, Mic } from "lucide-react";
 import { PhonemeMatcherData } from "../../types/activity";
 
+import ActivityLayout from "../layout/ActivityLayout";
+
 interface Props {
   data: PhonemeMatcherData;
   level: string;
@@ -72,39 +74,37 @@ export default function PhonemeMatcher({ data, level }: Props) {
   };
 
   return (
-    <div className="w-full mx-auto pb-32 max-w-4xl px-5 fade-in-view">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        @keyframes pulse-ring {
-          0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); opacity: 1; }
-          100% { transform: scale(1.3); box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); opacity: 0; }
-        }
-        .animate-pulse-ring {
-          animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-      `,
-        }}
-      />
+    <ActivityLayout title="Le Défi Phonétique" level={level} hideAnswerSection={true}>
+      <div className="w-full mx-auto pb-32 max-w-4xl px-5 fade-in-view">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); opacity: 1; }
+            100% { transform: scale(1.3); box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); opacity: 0; }
+          }
+          .animate-pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+          }
+        `,
+          }}
+        />
 
-      <header className="flex flex-col mb-10 pb-4 border-b-4 border-black gap-4">
-        <div className="flex justify-between items-center w-full">
-          <span className="text-[10px] leading-none tracking-[0.08em] uppercase font-bold text-[#747878]">
-            {level} EXERCISE
-          </span>
-        </div>
-        <div>
-          <span className="font-sans font-bold text-[10px] leading-none tracking-[0.08em] uppercase text-[#444748] block mb-2">
-            LE DÉFI PHONÉTIQUE
-          </span>
-          <h2 className="font-serif text-3xl font-black text-black">
-            Maîtrise de la Nasale
-          </h2>
-          <p className="text-[#444748] mt-2 font-serif italic max-w-xl">
-            {data.description}
-          </p>
-        </div>
-      </header>
+        <header className="flex flex-col mb-10 pb-4 border-b-4 border-black gap-4">
+          <div className="flex justify-between items-center w-full">
+            <span className="text-[10px] leading-none tracking-[0.08em] uppercase font-bold text-[#747878]">
+              {level} EXERCISE
+            </span>
+          </div>
+          <div>
+            <h2 className="font-serif text-3xl font-black text-black">
+              Maîtrise de la Nasale
+            </h2>
+            <p className="text-[#444748] mt-2 font-serif italic max-w-xl">
+              {data.description}
+            </p>
+          </div>
+        </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mx-auto items-start">
         {/* Left Side: Target Card */}
@@ -227,5 +227,6 @@ export default function PhonemeMatcher({ data, level }: Props) {
         </div>
       </div>
     </div>
+    </ActivityLayout>
   );
 }

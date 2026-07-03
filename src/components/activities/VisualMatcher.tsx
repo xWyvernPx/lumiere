@@ -13,6 +13,8 @@ import {
 import { Button } from "../ui/Button";
 import { VisualMatcherData } from "../../types/activity";
 
+import ActivityLayout from "../layout/ActivityLayout";
+
 interface Props {
   data: VisualMatcherData;
 }
@@ -73,66 +75,69 @@ export default function VisualMatcher({ data }: Props) {
   if (sessionCompleted) {
     const finalPercentage = Math.round((score / totalQuestions) * 100);
     return (
-      <div className="max-w-2xl mx-auto py-12 px-5 block fade-in-view">
-        <div className="bg-white border-t-4 border-black border-l border-r border-b border-[var(--border)] border-opacity-30 p-8 text-center space-y-8">
-          <div className="flex justify-center">
-            <div className="p-4 bg-[var(--accent-bg)] border-2 border-[var(--accent)] text-[var(--accent)] rounded-full">
-              <Award className="w-16 h-16" />
+      <ActivityLayout title="Visual Matcher" hideAnswerSection={true}>
+        <div className="max-w-2xl mx-auto py-12 px-5 block fade-in-view">
+          <div className="bg-[var(--background)] border-t-4 border-[var(--primary)] border-l border-r border-b border-[var(--border)] border-opacity-30 p-8 text-center space-y-8 shadow-sm">
+            <div className="flex justify-center">
+              <div className="p-4 bg-[var(--primary)] text-[var(--background)] rounded-full">
+                <Award className="w-16 h-16" />
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#747878]">
-              Session Completed
-            </span>
-            <h1 className="text-4xl font-serif font-black">
-              Scholarly Achievements
-            </h1>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto border border-[#e2e2e2] p-4 text-left">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#747878] block">
-                Accuracy
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60">
+                Session Completed
               </span>
-              <span className="text-2xl font-serif font-bold text-black">
-                {finalPercentage}%
-              </span>
+              <h1 className="text-4xl font-serif font-black">
+                Scholarly Achievements
+              </h1>
             </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#747878] block">
-                Score
-              </span>
-              <span className="text-2xl font-serif font-bold text-black">
-                {score} / {totalQuestions}
-              </span>
+
+            <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto border border-[var(--border)] border-opacity-20 p-4 text-left">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60 block">
+                  Accuracy
+                </span>
+                <span className="text-2xl font-serif font-bold text-[var(--foreground)]">
+                  {finalPercentage}%
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60 block">
+                  Score
+                </span>
+                <span className="text-2xl font-serif font-bold text-[var(--foreground)]">
+                  {score} / {totalQuestions}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <p className="font-serif italic text-[#444748] text-lg max-w-md mx-auto">
-            "Ce que l'on conçoit bien s'énonce clairement, et les mots pour le
-            dire arrivent aisément." <br />
-            <span className="text-xs font-sans font-bold uppercase tracking-wider text-[#747878] not-italic">
-              — Nicolas Boileau
-            </span>
-          </p>
+            <p className="font-serif italic text-[var(--foreground)] opacity-80 text-lg max-w-md mx-auto">
+              "Ce que l'on conçoit bien s'énonce clairement, et les mots pour le
+              dire arrivent aisément." <br />
+              <span className="text-xs font-sans font-bold uppercase tracking-wider text-[var(--foreground)] opacity-60 not-italic">
+                — Nicolas Boileau
+              </span>
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button
-              variant="outline"
-              onClick={handleRestart}
-              className="px-6 py-3 tracking-widest uppercase text-xs flex items-center justify-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" /> Restart Session
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Button
+                variant="outline"
+                onClick={handleRestart}
+                className="px-6 py-3 tracking-widest uppercase text-xs flex items-center justify-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4" /> Restart Session
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </ActivityLayout>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto block fade-in-view">
+    <ActivityLayout title="Visual Matcher" hideAnswerSection={true}>
+      <div className="max-w-4xl mx-auto block fade-in-view py-6">
       {/* Header Area */}
       <header className="flex flex-col gap-4 mb-8">
         <div className="flex justify-between items-center">
@@ -297,5 +302,6 @@ export default function VisualMatcher({ data }: Props) {
         )}
       </footer>
     </div>
+    </ActivityLayout>
   );
 }

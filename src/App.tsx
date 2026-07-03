@@ -55,7 +55,7 @@ const teacherRoute = createRoute({
 });
 
 const activityRoute = createRoute({
-  getParentRoute: () => appLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "/activity/$activityId",
   component: ActivityPage,
 });
@@ -83,13 +83,12 @@ const appLayoutWithChildren = appLayoutRoute.addChildren([
   indexRoute,
   classroomRoute,
   teacherRoute,
-  activityRoute,
   communityRoute,
   archivesRoute,
   libraryRoute,
 ]);
 
-const routeTree = rootRoute.addChildren([appLayoutWithChildren, authRoute]);
+const routeTree = rootRoute.addChildren([appLayoutWithChildren, authRoute, activityRoute]);
 
 // 4. Create the Router Instance
 const router = createRouter({ routeTree });

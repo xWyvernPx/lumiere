@@ -8,6 +8,10 @@ import {
   ArrowRight,
   Clock,
   Lock,
+  Waves,
+  MessageSquare,
+  Coffee,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Progress } from "../../components/ui/Progress";
@@ -121,32 +125,31 @@ export default function PracticingPage() {
 
       <section>
         <Tabs defaultValue="speaking" className="w-full">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-2 border-b-2 border-[var(--border)] border-opacity-20 gap-4">
-            <h3 className="text-3xl font-serif font-black mb-1">Curriculum</h3>
-            <TabsList className="flex gap-2 flex-wrap justify-end border-b-0 w-auto">
+          <div className="flex flex-wrap items-end gap-8 border-b border-[#e2e2e2] mb-10">
+            <TabsList className="flex gap-8 flex-wrap justify-start border-b-0 w-auto bg-transparent h-auto p-0">
               <TabsTrigger
                 value="speaking"
-                className="flex items-center gap-2 font-bold uppercase tracking-widest text-[var(--foreground)]"
+                className="pb-4 border-b-2 transition-all data-[state=active]:border-black data-[state=active]:text-black data-[state=inactive]:border-transparent data-[state=inactive]:font-medium data-[state=inactive]:text-[#444748] data-[state=inactive]:hover:text-black font-sans text-lg capitalize tracking-normal px-0"
               >
-                <Mic className="w-4 h-4" /> Speaking
+                Speaking
               </TabsTrigger>
               <TabsTrigger
                 value="listening"
-                className="flex items-center gap-2 font-bold uppercase tracking-widest text-[var(--foreground)]"
+                className="pb-4 border-b-2 transition-all data-[state=active]:border-black data-[state=active]:text-black data-[state=inactive]:border-transparent data-[state=inactive]:font-medium data-[state=inactive]:text-[#444748] data-[state=inactive]:hover:text-black font-sans text-lg capitalize tracking-normal px-0"
               >
-                <Headphones className="w-4 h-4" /> Listening
+                Listening
               </TabsTrigger>
               <TabsTrigger
                 value="reading"
-                className="flex items-center gap-2 font-bold uppercase tracking-widest text-[var(--foreground)]"
+                className="pb-4 border-b-2 transition-all data-[state=active]:border-black data-[state=active]:text-black data-[state=inactive]:border-transparent data-[state=inactive]:font-medium data-[state=inactive]:text-[#444748] data-[state=inactive]:hover:text-black font-sans text-lg capitalize tracking-normal px-0"
               >
-                <BookOpen className="w-4 h-4" /> Reading
+                Reading
               </TabsTrigger>
               <TabsTrigger
                 value="writing"
-                className="flex items-center gap-2 font-bold uppercase tracking-widest text-[var(--foreground)]"
+                className="pb-4 border-b-2 transition-all data-[state=active]:border-black data-[state=active]:text-black data-[state=inactive]:border-transparent data-[state=inactive]:font-medium data-[state=inactive]:text-[#444748] data-[state=inactive]:hover:text-black font-sans text-lg capitalize tracking-normal px-0"
               >
-                <PenTool className="w-4 h-4" /> Writing
+                Writing
               </TabsTrigger>
             </TabsList>
           </div>
@@ -181,105 +184,93 @@ export default function PracticingPage() {
 function SpeakingTab() {
   const speakingActivities = ACTIVITIES.filter(a => a.type === 'PHONEME_MATCHER');
   return (
-    <div className="flex flex-col gap-12">
+    <div className="space-y-12">
       <div>
-        <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] border-opacity-20 pb-2 mb-6">
-          I. Phonetics & Mechanics
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+        <div className="flex items-center gap-4 mb-6">
+          <h4 className="font-serif text-[20px] font-bold uppercase tracking-tight whitespace-nowrap">
+            I. Phonetics & Mechanics
+          </h4>
+          <div className="border-b border-black h-px w-full"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {speakingActivities.map((activity) => (
             <Link
               key={activity.id}
               to="/activity/$activityId"
               params={{ activityId: activity.id }}
-              className="group cursor-pointer flex flex-col justify-between text-left"
+              className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col"
             >
-              <div>
-                <div className="border-t-4 border-[var(--border)] pt-3 mb-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-serif font-bold text-xl group-hover:text-[var(--accent)] transition-colors">
-                      {activity.title}
-                    </h4>
-                    <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></span>
-                  </div>
-                  <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-                    {activity.description}
-                  </p>
-                </div>
+              <div className="flex justify-between items-start mb-4">
+                <Waves className="w-5 h-5 text-[#3d627b]" />
+                <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">15 MIN</span>
               </div>
-              <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3 mt-auto">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60">
-                  {activity.format}
-                </span>
-                <Badge
-                  variant="outline"
-                  className="text-[10px] py-0 px-1 border-[var(--border)] text-[var(--foreground)]"
-                >
-                  {activity.level}
-                </Badge>
+              <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+                {activity.title}
+              </h5>
+              <p className="text-[#444748] text-sm mb-6 flex-1">
+                {activity.description}
+              </p>
+              <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+                <span>COMMENCER</span>
+                <ChevronRight className="w-4 h-4 ml-1" />
               </div>
             </Link>
           ))}
-          <div className="group cursor-pointer">
-            <div className="border-t-[1px] border-[var(--border)] pt-3 mb-3">
-              <h4 className="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">
-                The Art of Shadowing
-              </h4>
-              <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-                Mimic native speakers meticulously to improve your intonation,
-                flow, and overall conversational rhythm.
-              </p>
+          <div className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <Mic className="w-5 h-5 text-[#3d627b]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">10 MIN</span>
             </div>
-            <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60">
-                Status
-              </span>
-              <span className="text-xs font-serif italic text-[var(--foreground)]">
-                8/10 Completed
-              </span>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+              The Art of Shadowing
+            </h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">
+              Mimic native speakers meticulously to improve your intonation, flow, and overall conversational rhythm.
+            </p>
+            <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+              <span>COMMENCER</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <h4 className="text-sm font-bold uppercase tracking-widest text-[var(--foreground)] border-b border-[var(--border)] border-opacity-20 pb-2 mb-6">
-          II. Simulated Scenarios
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-          <div className="group cursor-pointer">
-            <div className="border-t-[1px] border-[var(--border)] pt-3 mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <h4 className="font-serif font-bold text-xl group-hover:text-[var(--accent)] transition-colors">
-                  The Parisian Café
-                </h4>
-                <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></span>
+      <div className="pb-16">
+        <div className="flex items-center gap-4 mb-6">
+          <h4 className="font-serif text-[20px] font-bold uppercase tracking-tight whitespace-nowrap">
+            II. Simulated Scenarios
+          </h4>
+          <div className="border-b border-black h-px w-full"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border-l-4 border-[#3d627b] border-t border-r border-b border-[#e2e2e2] p-6 bg-[#f4f4f4] cursor-pointer flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex gap-2">
+                <Coffee className="w-5 h-5 text-[#3d627b]" />
+                <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#3d627b] uppercase bg-[#bce2ff] bg-opacity-30 px-2 py-0.5">EN COURS</span>
               </div>
-              <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-                Engage in interactive AI conversations modeled after real-world
-                scenarios. Practice ordering and pleasantries.
-              </p>
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">30 MIN</span>
             </div>
-            <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">
-                In Progress
-              </span>
-              <span className="text-xs font-serif italic text-[var(--foreground)] opacity-70 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" /> 5 min
-              </span>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2">The Parisian Café</h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">Engage in interactive AI conversations modeled after real-world scenarios. Practice ordering and pleasantries.</p>
+            <div className="h-1 w-full bg-[#e2e2e2] mb-4">
+              <div className="h-full bg-[#3d627b]" style={{ width: '40%' }}></div>
             </div>
+            <button className="text-[#3d627b] font-bold text-xs uppercase flex items-center hover:gap-2 transition-all mt-auto w-max">
+              CONTINUER L'EXERCICE <ArrowRight className="w-4 h-4 ml-1" />
+            </button>
           </div>
-          <div className="group cursor-pointer opacity-60">
-            <div className="border-t-[1px] border-[var(--border)] pt-3 mb-3">
-              <h4 className="font-serif font-bold text-xl mb-2 flex items-center gap-2">
-                Discuss & Debate <Lock className="w-4 h-4" />
-              </h4>
-              <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-                Learn to express complex opinions and construct persuasive
-                arguments. Restricted to Level B2+ learners.
-              </p>
+          <div className="border border-[#e2e2e2] p-6 bg-white opacity-50 relative overflow-hidden group flex flex-col">
+            <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-[1px] z-10">
+              <Lock className="w-10 h-10 text-black" />
             </div>
-            <div className="border-t border-[var(--border)] border-opacity-20 pt-3">
-              <Progress value={30} className="h-1.5" />
+            <div className="flex justify-between items-start mb-4">
+              <MessageSquare className="w-5 h-5 text-[#444748]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">45 MIN</span>
+            </div>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2">Discuss & Debate</h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">Learn to express complex opinions and construct persuasive arguments. Restricted to Level B2+ learners.</p>
+            <div className="flex items-center text-xs font-bold text-[#444748] mt-auto">
+              <span>DÉBLOQUER AU NIVEAU 5</span>
             </div>
           </div>
         </div>
@@ -290,38 +281,47 @@ function SpeakingTab() {
 
 function ListeningTab() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-      <div className="group cursor-pointer">
-        <div className="border-t-4 border-[var(--border)] pt-3 mb-3">
-          <h4 className="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">
-            Daily Podcasts
+    <div className="space-y-12">
+      <div>
+        <div className="flex items-center gap-4 mb-6">
+          <h4 className="font-serif text-[20px] font-bold uppercase tracking-tight whitespace-nowrap">
+            I. Comprehension
           </h4>
-          <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-            Slowed-down news and stories with interactive transcripts to follow
-            along word-by-word.
-          </p>
+          <div className="border-b border-black h-px w-full"></div>
         </div>
-        <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3">
-          <Badge
-            variant="outline"
-            className="text-[var(--accent)] border-[var(--accent)] tracking-widest uppercase text-[10px] px-1.5"
-          >
-            New Episode
-          </Badge>
-          <span className="text-xs font-serif italic text-[var(--foreground)]">
-            Vol. 42
-          </span>
-        </div>
-      </div>
-      <div className="group cursor-pointer">
-        <div className="border-t-[1px] border-[var(--border)] pt-3 mb-3">
-          <h4 className="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">
-            Dictée Classique
-          </h4>
-          <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-            The classic French dictation exercise. Listen to a passage and type
-            exactly what you hear to master spelling and grammar nuances.
-          </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <Headphones className="w-5 h-5 text-[#3d627b]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">20 MIN</span>
+            </div>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+              Daily Podcasts
+            </h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">
+              Slowed-down news and stories with interactive transcripts to follow along word-by-word.
+            </p>
+            <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+              <span>COMMENCER</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </div>
+          </div>
+          <div className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <Mic className="w-5 h-5 text-[#3d627b]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">15 MIN</span>
+            </div>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+              Dictée Classique
+            </h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">
+              The classic French dictation exercise. Listen to a passage and type exactly what you hear to master spelling and grammar nuances.
+            </p>
+            <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+              <span>COMMENCER</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -333,50 +333,53 @@ import { ACTIVITIES } from "../../data/activities";
 function ReadingTab() {
   const readingActivities = ACTIVITIES.filter(a => a.type !== 'PHONEME_MATCHER');
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-      {readingActivities.map((activity) => (
-        <Link
-          key={activity.id}
-          to="/activity/$activityId"
-          params={{ activityId: activity.id }}
-          className="group cursor-pointer flex flex-col justify-between text-left"
-        >
-          <div>
-            <div className="border-t-4 border-[var(--border)] pt-3 mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <h4 className="font-serif font-bold text-xl group-hover:text-[var(--accent)] transition-colors">
-                  {activity.title}
-                </h4>
-                <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></span>
+    <div className="space-y-12">
+      <div>
+        <div className="flex items-center gap-4 mb-6">
+          <h4 className="font-serif text-[20px] font-bold uppercase tracking-tight whitespace-nowrap">
+            I. Text Analysis
+          </h4>
+          <div className="border-b border-black h-px w-full"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {readingActivities.map((activity) => (
+            <Link
+              key={activity.id}
+              to="/activity/$activityId"
+              params={{ activityId: activity.id }}
+              className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <BookOpen className="w-5 h-5 text-[#3d627b]" />
+                <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">20 MIN</span>
               </div>
-              <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
+              <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+                {activity.title}
+              </h5>
+              <p className="text-[#444748] text-sm mb-6 flex-1">
                 {activity.description}
               </p>
+              <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+                <span>COMMENCER</span>
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </div>
+            </Link>
+          ))}
+          <div className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <BookOpen className="w-5 h-5 text-[#3d627b]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">30 MIN</span>
             </div>
-          </div>
-          <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3 mt-auto">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60">
-              {activity.format}
-            </span>
-            <Badge
-              variant="outline"
-              className="text-[10px] py-0 px-1 border-[var(--border)] text-[var(--foreground)]"
-            >
-              {activity.level}
-            </Badge>
-          </div>
-        </Link>
-      ))}
-      <div className="group cursor-pointer flex flex-col justify-between text-left">
-        <div>
-          <div className="border-t-[1px] border-[var(--border)] pt-3 mb-3">
-            <h4 className="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
               Literary Snippets
-            </h4>
-            <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-              Immerse yourself in excerpts from classic French literature.
-              Featuring Hugo, Camus, and Proust.
+            </h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">
+              Immerse yourself in excerpts from classic French literature. Featuring Hugo, Camus, and Proust.
             </p>
+            <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+              <span>COMMENCER</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </div>
           </div>
         </div>
       </div>
@@ -386,21 +389,31 @@ function ReadingTab() {
 
 function WritingTab() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-      <div className="group cursor-pointer">
-        <div className="border-t-4 border-[var(--border)] pt-3 mb-3">
-          <h4 className="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">
-            The Editor's Desk
+    <div className="space-y-12">
+      <div>
+        <div className="flex items-center gap-4 mb-6">
+          <h4 className="font-serif text-[20px] font-bold uppercase tracking-tight whitespace-nowrap">
+            I. Composition
           </h4>
-          <p className="font-serif text-sm text-[var(--foreground)] opacity-80 mb-4 line-clamp-3">
-            Write a short paragraph daily on a given prompt. Our AI 'editor'
-            will review and correct your grammar.
-          </p>
+          <div className="border-b border-black h-px w-full"></div>
         </div>
-        <div className="flex justify-between items-center border-t border-[var(--border)] border-opacity-20 pt-3">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-red-600">
-            Due Today
-          </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-[#e2e2e2] p-6 bg-white hover:border-black transition-colors cursor-pointer group flex flex-col">
+            <div className="flex justify-between items-start mb-4">
+              <PenTool className="w-5 h-5 text-[#3d627b]" />
+              <span className="font-sans text-[10px] leading-none tracking-[0.08em] font-bold text-[#444748] uppercase">25 MIN</span>
+            </div>
+            <h5 className="font-serif text-[20px] leading-[1.4] font-bold mb-2 group-hover:underline">
+              The Editor's Desk
+            </h5>
+            <p className="text-[#444748] text-sm mb-6 flex-1">
+              Write a short paragraph daily on a given prompt. Our AI 'editor' will review and correct your grammar.
+            </p>
+            <div className="flex items-center text-xs font-bold text-black group-hover:translate-x-1 transition-transform mt-auto">
+              <span>COMMENCER</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
