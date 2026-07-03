@@ -1,57 +1,106 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  RouterProvider,
+  Outlet,
+} from "@tanstack/react-router";
 
-import { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import FrontPage from './components/FrontPage';
-import ReadingSession from './components/ReadingSession';
-import Classroom from './components/Classroom';
+// Layout and Pages imports
+import AppLayout from "./components/layout/AppLayout";
+import PracticingPage from "./pages/practicing";
+import ClassroomPage from "./pages/classroom";
+import TeacherClassroom from "./pages/classroom/teacher";
+import CommunityPage from "./pages/community";
+import ArchivesPage from "./pages/archives";
+import ActivityPage from "./pages/activity";
+import LibraryPage from "./pages/library";
+
+import AuthPage from "./pages/auth";
+
+// 1. Declare the Root Route
+const rootRoute = createRootRoute({
+  component: () => <Outlet />,
+});
+
+const appLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: "app",
+  component: AppLayout,
+});
+
+const authRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/auth",
+  component: AuthPage,
+});
+
+// 2. Define Child Routes
+const indexRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/",
+  component: PracticingPage,
+});
+
+const classroomRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/classroom",
+  component: ClassroomPage,
+});
+
+const teacherRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/classroom/teacher",
+  component: TeacherClassroom,
+});
+
+const activityRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/activity/$activityId",
+  component: ActivityPage,
+});
+
+const libraryRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/library",
+  component: LibraryPage,
+});
+
+const communityRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/community",
+  component: CommunityPage,
+});
+
+const archivesRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/archives",
+  component: ArchivesPage,
+});
+
+// 3. Assemble the Route Tree
+const appLayoutWithChildren = appLayoutRoute.addChildren([
+  indexRoute,
+  classroomRoute,
+  teacherRoute,
+  activityRoute,
+  communityRoute,
+  archivesRoute,
+  libraryRoute,
+]);
+
+const routeTree = rootRoute.addChildren([appLayoutWithChildren, authRoute]);
+
+// 4. Create the Router Instance
+const router = createRouter({ routeTree });
+
+// 5. Provide Type Safety Support for routing paths and links
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('frontpage');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  return (
-    <div className="text-[var(--foreground)] antialiased h-screen overflow-hidden flex font-sans selection:bg-[var(--accent)] selection:text-[var(--background)] bg-[var(--background)]">
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-[var(--primary)]/40 z-20 lg:hidden backdrop-blur-sm transition-opacity" 
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Sidebar Navigation */}
-      <Sidebar 
-        currentView={currentView} 
-        setCurrentView={setCurrentView} 
-        isSidebarOpen={isSidebarOpen} 
-        setIsSidebarOpen={setIsSidebarOpen} 
-      />
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-[var(--background)]">
-        <Header toggleSidebar={() => setIsSidebarOpen(true)} />
-        
-        <div className="flex-1 overflow-y-auto px-4 py-8 sm:px-10 sm:py-12 bg-[var(--background)]">
-          {currentView === 'frontpage' && <FrontPage setCurrentView={setCurrentView} />}
-          {currentView === 'reading-session' && <ReadingSession setCurrentView={setCurrentView} />}
-          {currentView === 'classroom' && <Classroom />}
-          {currentView === 'community' && (
-             <div className="flex items-center justify-center h-full text-[var(--foreground)] opacity-80 font-serif italic fade-in-view">
-               Community Desk pending assignment...
-             </div>
-          )}
-          {currentView === 'archives' && (
-             <div className="flex items-center justify-center h-full text-[var(--foreground)] opacity-80 font-serif italic fade-in-view">
-               Saved Archives pending assignment...
-             </div>
-          )}
-        </div>
-      </main>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }

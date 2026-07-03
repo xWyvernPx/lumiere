@@ -1,60 +1,66 @@
-import { useRef, useState } from 'react'
-import type { KeyboardEvent, ChangeEvent } from 'react'
+import { useRef, useState } from "react";
+import type { KeyboardEvent, ChangeEvent } from "react";
 
 export interface OTPInputProps {
-  length?: number
-  value?: string
-  onChange?: (value: string) => void
-  disabled?: boolean
-  className?: string
+  length?: number;
+  value?: string;
+  onChange?: (value: string) => void;
+  disabled?: boolean;
+  className?: string;
 }
 
-export function OTPInput({ length = 6, value = '', onChange, disabled = false, className = '' }: OTPInputProps) {
+export function OTPInput({
+  length = 6,
+  value = "",
+  onChange,
+  disabled = false,
+  className = "",
+}: OTPInputProps) {
   const [digits, setDigits] = useState<string[]>(() => {
-    const initialDigits = new Array(length).fill('')
+    const initialDigits = new Array(length).fill("");
     for (let i = 0; i < Math.min(length, value.length); i++) {
-      initialDigits[i] = value[i]
+      initialDigits[i] = value[i];
     }
-    return initialDigits
-  })
+    return initialDigits;
+  });
 
-  const inputsRef = useRef<(HTMLInputElement | null)[]>([])
+  const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const updateValue = (newDigits: string[]) => {
-    setDigits(newDigits)
+    setDigits(newDigits);
     if (onChange) {
-      onChange(newDigits.join(''));
+      onChange(newDigits.join(""));
     }
-  }
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const val = e.target.value
-    if (!val) return
+    const val = e.target.value;
+    if (!val) return;
 
-    const lastChar = val[val.length - 1]
-    const newDigits = [...digits]
-    newDigits[index] = lastChar
-    updateValue(newDigits)
+    const lastChar = val[val.length - 1];
+    const newDigits = [...digits];
+    newDigits[index] = lastChar;
+    updateValue(newDigits);
 
     if (index < length - 1) {
-      inputsRef.current[index + 1]?.focus()
+      inputsRef.current[index + 1]?.focus();
     }
-  }
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === 'Backspace') {
-      const newDigits = [...digits]
-      
+    if (e.key === "Backspace") {
+      const newDigits = [...digits];
+
       if (newDigits[index]) {
-        newDigits[index] = ''
-        updateValue(newDigits)
+        newDigits[index] = "";
+        updateValue(newDigits);
       } else if (index > 0) {
-        newDigits[index - 1] = ''
-        updateValue(newDigits)
-        inputsRef.current[index - 1]?.focus()
+        newDigits[index - 1] = "";
+        updateValue(newDigits);
+        inputsRef.current[index - 1]?.focus();
       }
     }
-  }
+  };
 
   return (
     <div className={`flex gap-2 justify-center ${className}`}>
@@ -62,7 +68,7 @@ export function OTPInput({ length = 6, value = '', onChange, disabled = false, c
         <input
           key={index}
           ref={(el) => {
-            inputsRef.current[index] = el
+            inputsRef.current[index] = el;
           }}
           type="text"
           inputMode="numeric"
@@ -76,5 +82,5 @@ export function OTPInput({ length = 6, value = '', onChange, disabled = false, c
         />
       ))}
     </div>
-  )
+  );
 }
