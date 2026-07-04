@@ -18,9 +18,16 @@ import LibraryPage from "./pages/library";
 
 import AuthPage from "./pages/auth";
 
+import { GlobalTranslation } from "./components/shared/GlobalTranslation";
+
 // 1. Declare the Root Route
 const rootRoute = createRootRoute({
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <Outlet />
+      <GlobalTranslation />
+    </>
+  ),
 });
 
 const appLayoutRoute = createRoute({

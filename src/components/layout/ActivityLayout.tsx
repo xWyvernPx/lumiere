@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
 
-import { ForumContent, ForumDraft } from "../shared/Forum";
+import { ForumContent, ForumDraft, ForumProvider } from "../shared/Forum";
+import { HistoryContent } from "../shared/History";
 
 interface ActivityLayoutProps {
   title: string;
@@ -39,9 +40,10 @@ export default function ActivityLayout({
   const [activeTab, setActiveTab] = useState("description");
 
   return (
-    <div className="h-screen w-full flex flex-col bg-[var(--background)] overflow-hidden">
-      {/* Activity Header */}
-      <header className="bg-white border-b-4 border-[var(--primary)] shrink-0 w-full z-50">
+    <ForumProvider>
+      <div className="h-screen w-full flex flex-col bg-[var(--background)] overflow-hidden">
+        {/* Activity Header */}
+        <header className="bg-white border-b-4 border-[var(--primary)] shrink-0 w-full z-50">
         <div className="flex justify-between items-center w-full px-5 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-4">
             <Link to="/" className="text-[var(--primary)] opacity-70 hover:opacity-100 transition-opacity">
@@ -55,6 +57,22 @@ export default function ActivityLayout({
                 </span>
               )}
             </div>
+          </div>
+          <div className="flex items-center gap-4 sm:gap-5 font-bold text-sm tracking-wide pr-4 sm:pr-5">
+            <button 
+              className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
+              title="AI Assistant"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-assistant'))}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </button>
+            <button 
+              className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
+              title="Notebooks"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-notebooks'))}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
+            </button>
           </div>
         </div>
       </header>
@@ -114,12 +132,7 @@ export default function ActivityLayout({
                   {solutionsContent || <ForumContent title={title} />}
                 </TabsContent>
                 <TabsContent value="history" className="m-0 h-full fade-in-view">
-                  {historyContent || (
-                    <div className="flex flex-col items-center justify-center h-full opacity-50">
-                      <History className="w-12 h-12 mb-4" />
-                      <p>You have no past submissions for this activity.</p>
-                    </div>
-                  )}
+                  {historyContent || <HistoryContent />}
                 </TabsContent>
               </div>
             </Tabs>
@@ -149,5 +162,6 @@ export default function ActivityLayout({
         </PanelGroup>
       </div>
     </div>
+    </ForumProvider>
   );
 }
