@@ -14,11 +14,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
 import { ForumContent, ForumDraft, ForumProvider } from "../shared/Forum";
 import { HistoryContent } from "../shared/History";
 
+import { EditorialContent, EditorialDraft } from "../shared/Editorial";
+
 interface ActivityLayoutProps {
   title: string;
   level?: string;
   children: React.ReactNode; // The content for the Description tab
   editorialContent?: React.ReactNode;
+  editorialDraftContent?: React.ReactNode;
   solutionsContent?: React.ReactNode;
   solutionsDraftContent?: React.ReactNode;
   historyContent?: React.ReactNode;
@@ -31,6 +34,7 @@ export default function ActivityLayout({
   level,
   children,
   editorialContent,
+  editorialDraftContent,
   solutionsContent,
   solutionsDraftContent,
   historyContent,
@@ -116,22 +120,17 @@ export default function ActivityLayout({
                 </TabsList>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
-                <TabsContent value="description" className="m-0 h-full fade-in-view">
+              <div className="flex-1 flex flex-col overflow-hidden">
+                <TabsContent value="description" className="m-0 h-full fade-in-view overflow-y-auto p-6 scrollbar-thin">
                   {children}
                 </TabsContent>
-                <TabsContent value="editorial" className="m-0 h-full fade-in-view">
-                  {editorialContent || (
-                    <div className="flex flex-col items-center justify-center h-full opacity-50">
-                      <BookOpen className="w-12 h-12 mb-4" />
-                      <p>No editorial available for this activity.</p>
-                    </div>
-                  )}
+                <TabsContent value="editorial" className="m-0 h-full fade-in-view overflow-hidden">
+                  {editorialContent || <EditorialContent />}
                 </TabsContent>
-                <TabsContent value="solutions" className="m-0 h-full fade-in-view">
+                <TabsContent value="solutions" className="m-0 h-full fade-in-view overflow-y-auto p-6 scrollbar-thin">
                   {solutionsContent || <ForumContent title={title} />}
                 </TabsContent>
-                <TabsContent value="history" className="m-0 h-full fade-in-view">
+                <TabsContent value="history" className="m-0 h-full fade-in-view overflow-y-auto p-6 scrollbar-thin">
                   {historyContent || <HistoryContent />}
                 </TabsContent>
               </div>
@@ -152,6 +151,8 @@ export default function ActivityLayout({
             <Panel defaultSize={50} minSize={30} className="h-full flex flex-col bg-white">
               {activeTab === 'solutions' ? (
                 solutionsDraftContent || <ForumDraft />
+              ) : activeTab === 'editorial' ? (
+                editorialDraftContent || <EditorialDraft />
               ) : answerSection || (
                 <div className="flex-1 flex items-center justify-center opacity-50">
                   <p>Answer workspace</p>

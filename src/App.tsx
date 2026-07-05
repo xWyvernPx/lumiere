@@ -20,6 +20,9 @@ import AuthPage from "./pages/auth";
 
 import { GlobalTranslation } from "./components/shared/GlobalTranslation";
 
+import AdminLayout from "./components/layout/AdminLayout";
+import AdminUserManagement from "./pages/admin/index";
+
 // 1. Declare the Root Route
 const rootRoute = createRootRoute({
   component: () => (
@@ -85,6 +88,18 @@ const archivesRoute = createRoute({
   component: ArchivesPage,
 });
 
+const adminLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: "admin",
+  component: AdminLayout,
+});
+
+const adminIndexRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/admin",
+  component: AdminUserManagement,
+});
+
 // 3. Assemble the Route Tree
 const appLayoutWithChildren = appLayoutRoute.addChildren([
   indexRoute,
@@ -95,7 +110,11 @@ const appLayoutWithChildren = appLayoutRoute.addChildren([
   libraryRoute,
 ]);
 
-const routeTree = rootRoute.addChildren([appLayoutWithChildren, authRoute, activityRoute]);
+const adminLayoutWithChildren = adminLayoutRoute.addChildren([
+  adminIndexRoute
+]);
+
+const routeTree = rootRoute.addChildren([appLayoutWithChildren, adminLayoutWithChildren, authRoute, activityRoute]);
 
 // 4. Create the Router Instance
 const router = createRouter({ routeTree });

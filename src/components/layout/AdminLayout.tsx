@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   Settings,
@@ -6,7 +6,6 @@ import {
   Menu,
   Flame,
   Bookmark,
-  ChevronDown,
   Palette,
   ArrowLeft,
   LogOut,
@@ -16,13 +15,13 @@ import {
   Sparkles,
   ChevronsUpDown,
   Globe,
-  GraduationCap,
   Users,
-  Archive,
-  Library,
   BookOpen,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  Cpu,
+  HelpCircle,
+  Server
 } from "lucide-react";
 import { observer } from "@legendapp/state/react";
 import { themeStore, type ThemeStore } from "../../store/themeStore";
@@ -57,18 +56,18 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              {/* Header */}
              <div className="p-4 border-b-2 border-[var(--border)] flex items-center gap-3">
                 <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
-                  SJ
+                  AT
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <h4 className="text-sm font-bold text-[var(--foreground)] truncate">Sarah Jenkins</h4>
-                  <p className="text-xs text-[var(--foreground)] opacity-60 truncate">sarah@school.edu</p>
+                  <h4 className="text-sm font-bold text-[var(--foreground)] truncate">Admin Profile</h4>
+                  <p className="text-xs text-[var(--foreground)] opacity-60 truncate">System Authority</p>
                 </div>
              </div>
              {/* Action Items */}
              <div className="p-2 border-b-2 border-[var(--border)]">
                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
                  <Sparkles className="w-4 h-4" />
-                 <span>Upgrade to Pro</span>
+                 <span>System Report</span>
                </button>
              </div>
              
@@ -106,24 +105,9 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              </div>
              
              <div className="p-2 border-b-2 border-[var(--border)]">
-               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
-                 <ShieldCheck className="w-4 h-4" />
-                 <span>Account</span>
-               </button>
-               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
-                 <CreditCard className="w-4 h-4" />
-                 <span>Billing</span>
-               </button>
-               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
-                 <Bell className="w-4 h-4" />
-                 <span>Notifications</span>
-               </button>
-             </div>
-             
-             <div className="p-2 border-b-2 border-[var(--border)]">
-               <Link to="/admin" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
-                 <ShieldCheck className="w-4 h-4 text-blue-600" />
-                 <span className="text-blue-600 font-bold">Admin Dashboard</span>
+               <Link to="/" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+                 <ShieldCheck className="w-4 h-4 text-[var(--primary)]" />
+                 <span className="text-[var(--primary)] font-bold">Exit Admin</span>
                </Link>
              </div>
              
@@ -142,16 +126,16 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
         className={`p-2 hover:bg-[var(--code-bg)] transition-colors flex items-center gap-3 border border-transparent hover:border-[var(--border)] hover:border-opacity-20 ${isCollapsed ? 'justify-center w-full' : 'w-full'}`}
       >
         <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
-          SJ
+          AT
         </div>
         {!isCollapsed && (
           <>
             <div className="flex-1 text-left overflow-hidden">
               <h4 className="text-sm font-bold text-[var(--foreground)] truncate">
-                Sarah Jenkins
+                Admin Profile
               </h4>
               <p className="text-xs text-[var(--foreground)] opacity-60 truncate">
-                sarah@school.edu
+                System Authority
               </p>
             </div>
             <ChevronsUpDown className="w-4 h-4 text-[var(--foreground)] opacity-60 shrink-0" />
@@ -169,8 +153,6 @@ const Header = observer(function Header({
   toggleSidebar: () => void;
 }) {
   const [dateStr, setDateStr] = useState("Aujourd'hui");
-  const router = useRouter();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = {
@@ -178,11 +160,9 @@ const Header = observer(function Header({
       day: "numeric",
       month: "long",
     };
-    const today = new Date().toLocaleDateString("fr-FR", options);
+    const today = new Date().toLocaleDateString("en-US", options);
     setDateStr(today.charAt(0).toUpperCase() + today.slice(1));
   }, []);
-
-  const isRootRoute = pathname === "/" || pathname === "/classroom" || pathname === "/community" || pathname === "/archives" || pathname === "/library";
 
   return (
     <header className="h-16 bg-[var(--background)] border-b-2 border-[var(--border)] flex items-center justify-between px-6 z-10 shrink-0">
@@ -194,54 +174,27 @@ const Header = observer(function Header({
           <Menu className="w-6 h-6" />
         </button>
         
-        {!isRootRoute ? (
-           <button 
-             onClick={() => router.history.back()} 
-             className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[var(--foreground)] hover:text-[var(--accent)] transition-colors cursor-pointer"
-           >
-             <ArrowLeft className="w-4 h-4" /> Back
-           </button>
-        ) : (
-          <div className="hidden sm:flex items-center gap-2 font-serif text-sm italic text-[var(--foreground)] opacity-80">
-            <span>L'Édition du Matin</span>
-            <span className="mx-2">—</span>
-            <span>{dateStr}</span>
-          </div>
-        )}
+        <div className="hidden sm:flex items-center gap-2 font-serif text-sm italic text-[var(--foreground)] opacity-80">
+          <span>Admin Workspace</span>
+          <span className="mx-2">—</span>
+          <span>{dateStr}</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 sm:gap-6">
-        <div className="flex items-center gap-4 sm:gap-5 font-bold text-sm tracking-wide border-r-2 border-[var(--border)] pr-4 sm:pr-5">
-          <button 
-            className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
-            title="AI Assistant"
-            onClick={() => window.dispatchEvent(new CustomEvent('open-assistant'))}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          </button>
-          <button 
-            className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
-            title="Notebooks"
-            onClick={() => window.dispatchEvent(new CustomEvent('open-notebooks'))}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>
-          </button>
-        </div>
         <div className="flex items-center gap-4 sm:gap-5 font-bold text-sm tracking-wide">
-          <div
-            className="flex items-center gap-1 sm:gap-2 cursor-help"
-            title="12 Day Streak"
+          <button 
+            className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
+            title="Notifications"
           >
-            <Flame className="w-4 h-4 text-[var(--foreground)]" />
-            <span>12</span>
-          </div>
-          <div
-            className="flex items-center gap-1 sm:gap-2 cursor-help"
-            title="450 Gems"
+            <Bell className="w-5 h-5" />
+          </button>
+          <button 
+            className="text-[var(--foreground)] opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center justify-center"
+            title="Servers"
           >
-            <Bookmark className="w-4 h-4 text-[var(--accent)]" />
-            <span>450</span>
-          </div>
+            <Server className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </header>
@@ -257,12 +210,14 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
   const [sidebarWidth, setSidebarWidth] = useState(288); // 288px = w-72
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navItems = [
-    { to: "/", label: "Practicing", icon: BookOpen },
-    { to: "/classroom", label: "The Classroom", icon: GraduationCap },
-    { to: "/community", label: "Community Desk", icon: Users },
-    { to: "/archives", label: "Saved Archives", icon: Archive },
-    { to: "/library", label: "Activities Library", icon: Library },
+    { to: "/admin", label: "User Management", icon: Users },
   ];
+  
+  const secondaryItems = [
+    { label: "Operations", icon: Settings },
+    { label: "Content", icon: BookOpen },
+    { label: "AI Systems", icon: Cpu },
+  ]
 
   return (
     <aside
@@ -271,8 +226,8 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
     >
       <div className={`p-8 border-b-4 border-[var(--border)] flex items-center shrink-0 ${isCollapsed ? 'justify-center p-4' : 'justify-between'}`}>
         {!isCollapsed && (
-          <span className="font-serif font-black text-4xl tracking-tight truncate">
-            Lumière.
+          <span className="font-serif font-black text-4xl tracking-tight truncate uppercase">
+            Admin.
           </span>
         )}
         <div className="flex items-center gap-2">
@@ -296,7 +251,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
         <div className="space-y-4">
           {!isCollapsed && (
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-60 mb-2 px-4">
-              Sections
+              Management
             </h3>
           )}
           {navItems.map((item) => {
@@ -306,7 +261,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
                 key={item.to}
                 to={item.to}
                 onClick={() => setIsSidebarOpen(false)}
-                activeOptions={{ exact: item.to === "/" }}
+                activeOptions={{ exact: item.to === "/admin" }}
                 className={`w-full flex items-center text-sm tracking-wide group transition-colors cursor-pointer ${isCollapsed ? 'justify-center p-3 hover:bg-[var(--code-bg)]' : 'gap-4 p-2'}`}
                 title={isCollapsed ? item.label : undefined}
               >
@@ -340,29 +295,45 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
               </Link>
             );
           })}
+          
+          {secondaryItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a
+                href="#"
+                key={item.label}
+                className={`w-full flex items-center text-sm tracking-wide group transition-colors cursor-pointer ${isCollapsed ? 'justify-center p-3 hover:bg-[var(--code-bg)]' : 'gap-4 p-2'}`}
+                title={isCollapsed ? item.label : undefined}
+              >
+                <div className="relative flex items-center justify-center shrink-0">
+                  <Icon className={`w-5 h-5 transition-colors text-[var(--foreground)] opacity-60 group-hover:opacity-100`} />
+                </div>
+                {!isCollapsed && (
+                  <span className="text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] font-medium truncate">
+                    {item.label}
+                  </span>
+                )}
+              </a>
+            );
+          })}
         </div>
-
-        {!isCollapsed && (
-          <div className="pt-6 border-t border-[var(--border)] border-opacity-20 px-2">
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]">
-                Daily Edition
-              </span>
-              <span className="text-xs font-bold text-[var(--accent)]">
-                20/30 XP
-              </span>
-            </div>
-            <div className="w-full bg-[var(--code-bg)] border border-[var(--border)] border-opacity-20 h-2">
-              <div
-                className="bg-[var(--primary)] h-full"
-                style={{ width: "66%" }}
-              ></div>
-            </div>
-            <p className="font-serif text-sm text-[var(--foreground)] opacity-80 italic mt-3">
-              10 points remaining to maintain your publishing streak.
-            </p>
-          </div>
-        )}
+        
+        <div className="pt-6 border-t border-[var(--border)] border-opacity-20">
+            <a
+                href="#"
+                className={`w-full flex items-center text-sm tracking-wide group transition-colors cursor-pointer ${isCollapsed ? 'justify-center p-3 hover:bg-[var(--code-bg)]' : 'gap-4 p-2'}`}
+                title={isCollapsed ? "Support" : undefined}
+              >
+                <div className="relative flex items-center justify-center shrink-0">
+                  <HelpCircle className={`w-5 h-5 transition-colors text-[var(--foreground)] opacity-60 group-hover:opacity-100`} />
+                </div>
+                {!isCollapsed && (
+                  <span className="text-[var(--foreground)] opacity-80 hover:text-[var(--foreground)] font-medium truncate">
+                    Support
+                  </span>
+                )}
+              </a>
+        </div>
       </nav>
 
       <div className={`pb-6 mt-auto shrink-0 ${isCollapsed ? 'px-2' : 'px-4'}`}>
@@ -399,7 +370,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
   );
 };
 
-export default function AppLayout() {
+export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
