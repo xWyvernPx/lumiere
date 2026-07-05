@@ -1,5 +1,8 @@
 import React from 'react';
 import { Filter, Download } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/Select';
 
 export default function AdminUserManagement() {
   return (
@@ -13,14 +16,14 @@ export default function AdminUserManagement() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="border border-[var(--primary)] bg-[var(--background)] px-4 py-2 font-sans font-bold text-sm text-[var(--primary)] hover:bg-[var(--code-bg)] transition-colors flex items-center gap-2 cursor-pointer">
+          <Button variant="outline" className="gap-2">
             <Filter className="w-[18px] h-[18px]" />
             Filter View
-          </button>
-          <button className="bg-[var(--primary)] text-[var(--background)] px-4 py-2 font-sans font-bold text-sm hover:bg-opacity-90 transition-colors flex items-center gap-2 cursor-pointer">
+          </Button>
+          <Button variant="primary" className="gap-2">
             <Download className="w-[18px] h-[18px]" />
             Export CSV
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -33,18 +36,32 @@ export default function AdminUserManagement() {
             <span className="text-[var(--foreground)] opacity-60">Total Records</span>
           </div>
           <div className="flex gap-4">
-            <select className="border border-[var(--border)] border-opacity-20 bg-[var(--background)] text-sm font-medium py-1 pl-3 pr-8 focus:ring-0 focus:border-[var(--primary)] outline-none cursor-pointer">
-              <option>All Roles</option>
-              <option>Student</option>
-              <option>Teacher</option>
-              <option>Admin</option>
-            </select>
-            <select className="border border-[var(--border)] border-opacity-20 bg-[var(--background)] text-sm font-medium py-1 pl-3 pr-8 focus:ring-0 focus:border-[var(--primary)] outline-none cursor-pointer">
-              <option>All Statuses</option>
-              <option>Active</option>
-              <option>Suspended</option>
-              <option>Pending</option>
-            </select>
+            <div className="w-32">
+              <Select defaultValue="all-roles">
+                <SelectTrigger className="h-8">
+                  <SelectValue placeholder="Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-roles">All Roles</SelectItem>
+                  <SelectItem value="student">Student</SelectItem>
+                  <SelectItem value="teacher">Teacher</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="w-36">
+              <Select defaultValue="all-statuses">
+                <SelectTrigger className="h-8">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-statuses">All Statuses</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="suspended">Suspended</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -80,9 +97,7 @@ export default function AdminUserManagement() {
                   </div>
                 </td>
                 <td className="py-3 px-5">
-                  <span className="inline-block px-2 py-0.5 border border-[var(--border)] border-opacity-20 text-xs font-bold bg-[var(--code-bg)]">
-                    Teacher
-                  </span>
+                  <Badge variant="outline">Teacher</Badge>
                 </td>
                 <td className="py-3 px-5">
                   <span className="flex items-center gap-1.5 text-blue-600">
@@ -93,13 +108,13 @@ export default function AdminUserManagement() {
                 <td className="py-3 px-5 text-[var(--foreground)] opacity-80">
                   Université Paris-Sorbonne
                 </td>
-                <td className="py-3 px-5 text-right">
-                  <button className="text-[var(--primary)] hover:underline font-sans text-xs font-bold uppercase tracking-widest mr-3 cursor-pointer">
+                <td className="py-3 px-5 text-right flex justify-end gap-2">
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 text-[var(--primary)]">
                     View
-                  </button>
-                  <button className="text-[var(--foreground)] opacity-60 hover:text-[var(--primary)] hover:opacity-100 font-sans text-xs font-bold uppercase tracking-widest cursor-pointer">
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 opacity-60 hover:opacity-100">
                     Impersonate
-                  </button>
+                  </Button>
                 </td>
               </tr>
               {/* Row 2 */}
@@ -111,9 +126,7 @@ export default function AdminUserManagement() {
                   </div>
                 </td>
                 <td className="py-3 px-5">
-                  <span className="inline-block px-2 py-0.5 border border-[var(--border)] border-opacity-20 text-xs font-bold bg-[var(--code-bg)]">
-                    Student
-                  </span>
+                  <Badge variant="outline">Student</Badge>
                 </td>
                 <td className="py-3 px-5">
                   <span className="flex items-center gap-1.5 text-red-600">
@@ -124,13 +137,13 @@ export default function AdminUserManagement() {
                 <td className="py-3 px-5 text-[var(--foreground)] opacity-80">
                   Université de Lyon
                 </td>
-                <td className="py-3 px-5 text-right">
-                  <button className="text-[var(--primary)] hover:underline font-sans text-xs font-bold uppercase tracking-widest mr-3 cursor-pointer">
+                <td className="py-3 px-5 text-right flex justify-end gap-2">
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 text-[var(--primary)]">
                     View
-                  </button>
-                  <button className="text-[var(--foreground)] opacity-60 hover:text-[var(--primary)] hover:opacity-100 font-sans text-xs font-bold uppercase tracking-widest cursor-pointer">
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 opacity-60 hover:opacity-100">
                     Impersonate
-                  </button>
+                  </Button>
                 </td>
               </tr>
               {/* Row 3 */}
@@ -142,9 +155,7 @@ export default function AdminUserManagement() {
                   </div>
                 </td>
                 <td className="py-3 px-5">
-                  <span className="inline-block px-2 py-0.5 border border-[var(--primary)] bg-[var(--primary)] text-[var(--background)] text-xs font-bold">
-                    Admin
-                  </span>
+                  <Badge variant="solid">Admin</Badge>
                 </td>
                 <td className="py-3 px-5">
                   <span className="flex items-center gap-1.5 text-blue-600">
@@ -155,13 +166,13 @@ export default function AdminUserManagement() {
                 <td className="py-3 px-5 text-[var(--foreground)] opacity-80">
                   Lumière Institute (Global)
                 </td>
-                <td className="py-3 px-5 text-right">
-                  <button className="text-[var(--primary)] hover:underline font-sans text-xs font-bold uppercase tracking-widest mr-3 cursor-pointer">
+                <td className="py-3 px-5 text-right flex justify-end gap-2">
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 text-[var(--primary)]">
                     View
-                  </button>
-                  <span className="text-[var(--foreground)] opacity-30 font-sans text-xs font-bold uppercase tracking-widest cursor-not-allowed">
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 opacity-30 cursor-not-allowed" disabled>
                     Impersonate
-                  </span>
+                  </Button>
                 </td>
               </tr>
               {/* Row 4 */}
@@ -173,9 +184,7 @@ export default function AdminUserManagement() {
                   </div>
                 </td>
                 <td className="py-3 px-5">
-                  <span className="inline-block px-2 py-0.5 border border-[var(--border)] border-opacity-20 text-xs font-bold bg-[var(--code-bg)]">
-                    Independent
-                  </span>
+                  <Badge variant="outline">Independent</Badge>
                 </td>
                 <td className="py-3 px-5">
                   <span className="flex items-center gap-1.5 text-[var(--foreground)] opacity-60">
@@ -186,13 +195,13 @@ export default function AdminUserManagement() {
                 <td className="py-3 px-5 text-[var(--foreground)] opacity-80">
                   Unaffiliated
                 </td>
-                <td className="py-3 px-5 text-right">
-                  <button className="text-[var(--primary)] hover:underline font-sans text-xs font-bold uppercase tracking-widest mr-3 cursor-pointer">
+                <td className="py-3 px-5 text-right flex justify-end gap-2">
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 text-[var(--primary)]">
                     View
-                  </button>
-                  <button className="text-[var(--foreground)] opacity-60 hover:text-[var(--primary)] hover:opacity-100 font-sans text-xs font-bold uppercase tracking-widest cursor-pointer">
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-6 text-xs uppercase tracking-widest px-2 opacity-60 hover:opacity-100">
                     Impersonate
-                  </button>
+                  </Button>
                 </td>
               </tr>
             </tbody>
@@ -205,22 +214,22 @@ export default function AdminUserManagement() {
             Showing 1 to 4 of 12,408 entries
           </span>
           <div className="flex gap-1 text-sm font-medium">
-            <button className="px-3 py-1 border border-[var(--border)] border-opacity-20 hover:bg-[var(--code-bg)] disabled:opacity-50 cursor-pointer" disabled>
+            <Button variant="outline" size="sm" disabled>
               ← Prev
-            </button>
-            <button className="px-3 py-1 border border-[var(--primary)] bg-[var(--primary)] text-[var(--background)] cursor-pointer">
+            </Button>
+            <Button variant="primary" size="sm">
               1
-            </button>
-            <button className="px-3 py-1 border border-[var(--border)] border-opacity-20 hover:bg-[var(--code-bg)] cursor-pointer">
+            </Button>
+            <Button variant="outline" size="sm">
               2
-            </button>
-            <button className="px-3 py-1 border border-[var(--border)] border-opacity-20 hover:bg-[var(--code-bg)] cursor-pointer">
+            </Button>
+            <Button variant="outline" size="sm">
               3
-            </button>
+            </Button>
             <span className="px-2 py-1 text-[var(--foreground)] opacity-60">...</span>
-            <button className="px-3 py-1 border border-[var(--border)] border-opacity-20 hover:bg-[var(--code-bg)] cursor-pointer">
+            <Button variant="outline" size="sm">
               Next →
-            </button>
+            </Button>
           </div>
         </div>
       </div>

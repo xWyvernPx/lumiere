@@ -15,6 +15,9 @@ import {
   Library
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
+import { Button } from '../../components/ui/Button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/Select';
+import { Input } from '../../components/ui/Input';
 
 export default function DeepArchive() {
   const [activeTab, setActiveTab] = useState('Comparative Linguistics');
@@ -238,12 +241,12 @@ export default function DeepArchive() {
     <div className="flex justify-between items-center py-4 border-t border-[#c4c7c7]">
       <p className="text-xs text-[#444748] font-medium">Showing {total} modules</p>
       <div className="flex gap-2">
-        <button className="px-4 py-2 rounded border border-[#c4c7c7] text-[#1a1c1c] text-xs font-bold uppercase hover:bg-white transition-colors disabled:opacity-50" disabled>
+        <Button variant="outline" size="sm" disabled>
           Previous
-        </button>
-        <button className="px-4 py-2 rounded bg-[#000000] text-white text-xs font-bold uppercase hover:bg-opacity-90 transition-colors">
+        </Button>
+        <Button variant="primary" size="sm">
           Next Page
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -256,25 +259,31 @@ export default function DeepArchive() {
             {/* Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-[#c4c7c7] rounded-xl shadow-sm items-center">
               <div className="relative flex-1 w-full">
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878]" />
-                <input 
-                  type="text" 
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878] z-10" />
+                <Input 
                   placeholder="Search 500+ modules..." 
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#c4c7c7] focus:ring-[#000000] focus:border-[#000000] text-sm bg-white text-[#1a1c1c] outline-none" 
+                  className="pl-10 h-10 w-full" 
                 />
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                <select className="text-sm border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] focus:ring-[#000000] outline-none h-10 px-3">
-                  <option>Level: A1-C2</option>
-                  <option>Elementary (A1-A2)</option>
-                  <option>Intermediate (B1-B2)</option>
-                  <option>Advanced (C1-C2)</option>
-                </select>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                <div className="w-48">
+                  <Select defaultValue="all">
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Level: A1-C2</SelectItem>
+                      <SelectItem value="elem">Elementary (A1-A2)</SelectItem>
+                      <SelectItem value="inter">Intermediate (B1-B2)</SelectItem>
+                      <SelectItem value="adv">Advanced (C1-C2)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="flex gap-1 flex-wrap sm:flex-nowrap">
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Reading</button>
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Writing</button>
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Speaking</button>
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Listening</button>
+                  <Button variant="outline" size="sm" className="h-10">Reading</Button>
+                  <Button variant="outline" size="sm" className="h-10">Writing</Button>
+                  <Button variant="outline" size="sm" className="h-10">Speaking</Button>
+                  <Button variant="outline" size="sm" className="h-10">Listening</Button>
                 </div>
               </div>
             </div>
@@ -290,20 +299,26 @@ export default function DeepArchive() {
             {/* Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-[#c4c7c7] rounded-xl shadow-sm items-center">
               <div className="relative flex-1 w-full">
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878]" />
-                <input 
-                  type="text" 
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878] z-10" />
+                <Input 
                   placeholder="Search mock exams..." 
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#c4c7c7] focus:ring-[#000000] focus:border-[#000000] text-sm bg-white text-[#1a1c1c] outline-none" 
+                  className="pl-10 h-10 w-full" 
                 />
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                <select className="text-sm border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] focus:ring-[#000000] outline-none h-10 px-3">
-                  <option>All Certifications</option>
-                  <option>DELF (A1-B2)</option>
-                  <option>DALF (C1-C2)</option>
-                  <option>TCF / TEF</option>
-                </select>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                <div className="w-48">
+                  <Select defaultValue="all">
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Certifications" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Certifications</SelectItem>
+                      <SelectItem value="delf">DELF (A1-B2)</SelectItem>
+                      <SelectItem value="dalf">DALF (C1-C2)</SelectItem>
+                      <SelectItem value="tcf">TCF / TEF</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
             
@@ -318,23 +333,29 @@ export default function DeepArchive() {
             {/* Filter Bar */}
             <div className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-[#c4c7c7] rounded-xl shadow-sm items-center">
               <div className="relative flex-1 w-full">
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878]" />
-                <input 
-                  type="text" 
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#747878] z-10" />
+                <Input 
                   placeholder="Search thematic modules..." 
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#c4c7c7] focus:ring-[#000000] focus:border-[#000000] text-sm bg-white text-[#1a1c1c] outline-none" 
+                  className="pl-10 h-10 w-full" 
                 />
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                <select className="text-sm border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] focus:ring-[#000000] outline-none h-10 px-3">
-                  <option>Level: All</option>
-                  <option>A1-A2</option>
-                  <option>B1-B2</option>
-                  <option>C1-C2</option>
-                </select>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                <div className="w-40">
+                  <Select defaultValue="all">
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Level: All</SelectItem>
+                      <SelectItem value="a1a2">A1-A2</SelectItem>
+                      <SelectItem value="b1b2">B1-B2</SelectItem>
+                      <SelectItem value="c1c2">C1-C2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="flex gap-1 flex-wrap sm:flex-nowrap">
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Reading</button>
-                  <button className="h-10 px-4 text-xs font-bold uppercase border border-[#c4c7c7] rounded-lg bg-[#f9f9f9] text-[#1a1c1c] hover:bg-[#eeeeee] transition-colors">Speaking</button>
+                  <Button variant="outline" size="sm" className="h-10">Reading</Button>
+                  <Button variant="outline" size="sm" className="h-10">Speaking</Button>
                 </div>
               </div>
             </div>
@@ -354,9 +375,9 @@ export default function DeepArchive() {
             <p className="text-[#444748] max-w-md">
               Access complete texts, interlinear translations, and critical commentary for ancient Greek, Latin, and Sanskrit works.
             </p>
-            <button className="mt-4 px-6 py-3 bg-[#000000] text-white text-sm font-bold uppercase rounded-lg hover:bg-opacity-90 transition-colors">
+            <Button variant="primary" className="mt-4">
               Explore the Library
-            </button>
+            </Button>
           </div>
         );
 

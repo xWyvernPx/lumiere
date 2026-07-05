@@ -6,6 +6,9 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./lib/queryClient";
+
 // Layout and Pages imports
 import AppLayout from "./components/layout/AppLayout";
 import PracticingPage from "./pages/practicing";
@@ -127,5 +130,9 @@ declare module "@tanstack/react-router" {
 }
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }

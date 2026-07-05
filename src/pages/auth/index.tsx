@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "../../components/ui/Button";
+import { useLogin, useRegister } from "./useAuth";
+import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    remember: false,
-  });
-  const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<{
     type: "success" | "error";
     message: string;
@@ -17,70 +14,54 @@ export default function AuthPage() {
   const [activeLang, setActiveLang] = useState("FR");
   const navigate = useNavigate();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleAuthSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setNotification(null);
-
-    // Simple Form Validations
-    if (!formData.email) {
-      showNotice("error", "Please enter a valid email address.");
-      return;
-    }
-    if (!formData.password) {
-      showNotice("error", "Please enter your password.");
-      return;
-    }
-    if (mode === "signup") {
-      if (formData.password !== formData.confirmPassword) {
-        showNotice("error", "Passwords do not match. Please try again.");
-        return;
-      }
-      if (!formData.remember) {
-        showNotice(
-          "error",
-          "You must agree to the Terms of Publication & Conduct.",
-        );
-        return;
-      }
-    }
-
-    setIsLoading(true);
-
-    // Simulate database action linked to USER & SESSION logical entity schemas
-    setTimeout(() => {
-      setIsLoading(false);
-      showNotice(
-        "success",
-        mode === "signin"
-          ? `Welcome back, Scholar! Successfully authenticated as ${formData.email}.`
-          : "Your scholarly account was successfully created! Welcome to Lumière.",
-      );
-      // Wait a moment then navigate
-      setTimeout(() => {
-        navigate({ to: "/" });
-      }, 1000);
-    }, 1000);
-  };
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
 
   const showNotice = (type: "success" | "error", message: string) => {
     setNotification({ type, message });
-    // Automatically dismiss after 5 seconds
     setTimeout(() => {
       setNotification(null);
     }, 5000);
   };
 
+  const handleLoginSubmit = async (value: any) => {
+    setNotification(null);
+    try {
+      const response = await loginMutation.mutateAsync(value);
+      localStorage.setItem("token", response.token);
+      if (response.refreshToken) {
+        localStorage.setItem("refreshToken", response.refreshToken);
+      }
+      showNotice("success", `Welcome back! Successfully authenticated.`);
+      setTimeout(() => {
+        navigate({ to: "/" });
+      }, 1000);
+    } catch (error: any) {
+      showNotice("error", error.response?.data?.message || "Authentication failed. Please check your credentials.");
+    }
+  };
+
+  const handleRegisterSubmit = async (value: any) => {
+    setNotification(null);
+    try {
+      const payload = {
+        email: value.email,
+        password: value.password,
+        firstName: value.email.split("@")[0], // Dummy name extraction for now
+        lastName: "User",
+      };
+      await registerMutation.mutateAsync(payload);
+      showNotice("success", "Your scholarly account was successfully created! You can now log in.");
+      setMode("signin");
+    } catch (error: any) {
+      showNotice("error", error.response?.data?.message || "Registration failed. Please try again.");
+    }
+  };
+
   const toggleLanguage = () => {
     setActiveLang((prev) => (prev === "FR" ? "EN" : "FR"));
   };
+
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans relative selection:bg-black selection:text-white">
@@ -184,156 +165,13 @@ export default function AuthPage() {
             </div>
 
             {/* Interactive Sign-in & Sign-up Form */}
-            <form className="space-y-6" onSubmit={handleAuthSubmit}>
-              <div className="space-y-2">
-                <label
-                  className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]"
-                  htmlFor="email"
-                >
-                  Email Address
-                </label>
-                <input
-                  className="w-full px-4 py-3 border-4 border-black font-sans font-medium placeholder:text-[#c4c7c7] bg-white transition-all focus:border-black focus:ring-0"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="scholar@lumiere.edu"
-                  type="email"
-                  required
-                />
-              </div>
+            {mode === "signin" ? (
+              <LoginForm onSubmit={handleLoginSubmit} showNotice={showNotice} />
+            ) : (
+              <RegisterForm onSubmit={handleRegisterSubmit} />
+            )}
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label
-                    className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]"
-                    htmlFor="password"
-                  >
-                    Password
-                  </label>
-                  {mode === "signin" && (
-                    <a
-                      className="font-sans font-bold text-[10px] text-[#3d627b] uppercase tracking-[0.1em] hover:underline cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        showNotice(
-                          "success",
-                          "Password reset instructions have been forwarded to your email inbox.",
-                        );
-                      }}
-                    >
-                      Forgot?
-                    </a>
-                  )}
-                </div>
-                <input
-                  className="w-full px-4 py-3 border-4 border-black font-sans font-medium placeholder:text-[#c4c7c7] bg-white transition-all focus:border-black focus:ring-0"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="••••••••"
-                  type="password"
-                  required
-                />
-              </div>
-
-              {/* Conditional Confirm Password block */}
-              {mode === "signup" && (
-                <div className="space-y-2 transition-all">
-                  <label
-                    className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]"
-                    htmlFor="confirmPassword"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    className="w-full px-4 py-3 border-4 border-black font-sans font-medium placeholder:text-[#c4c7c7] bg-white transition-all focus:border-black focus:ring-0"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="••••••••"
-                    type="password"
-                    required={mode === "signup"}
-                  />
-                </div>
-              )}
-
-              {/* Scholarly Agreement terms */}
-              <div className="flex items-start space-x-3 py-2">
-                <div className="flex items-center h-5">
-                  <input
-                    className="h-4 w-4 border-2 border-black text-black focus:ring-0 rounded-none cursor-pointer"
-                    id="remember"
-                    name="remember"
-                    type="checkbox"
-                    checked={formData.remember}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <label
-                  className="font-sans font-medium text-[12px] text-[#444748]"
-                  htmlFor="remember"
-                >
-                  I agree to the{" "}
-                  <a
-                    className="underline font-sans font-bold text-black cursor-pointer"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    Terms of Publication
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    className="underline font-sans font-bold text-black cursor-pointer"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    Scholarly Conduct
-                  </a>
-                  .
-                </label>
-              </div>
-
-              {/* Submit Trigger with Loading State */}
-              <button
-                className="w-full py-4 bg-black text-white font-sans font-bold text-sm uppercase tracking-widest hover:bg-[#474646] transition-colors active:scale-[0.98] flex items-center justify-center space-x-2 cursor-pointer border-none"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin h-5 w-5 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Processing Manuscripts...</span>
-                  </>
-                ) : (
-                  <span>
-                    {mode === "signin"
-                      ? "Begin Session"
-                      : "Establish Scholarship"}
-                  </span>
-                )}
-              </button>
-
-              {/* Social Login Integrations */}
+            {/* Social Login Integrations */}
               <div className="space-y-6 mt-6">
                 <div className="relative flex items-center py-2">
                   <div className="flex-grow border-t border-[#c4c7c7]"></div>
@@ -344,7 +182,8 @@ export default function AuthPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <button
+                  <Button
+                    variant="outline"
                     type="button"
                     onClick={() =>
                       showNotice(
@@ -352,7 +191,7 @@ export default function AuthPage() {
                         "Authenticating seamlessly via Google credentials...",
                       )
                     }
-                    className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer"
+                    className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer h-auto"
                   >
                     <svg
                       className="w-4 h-4"
@@ -379,8 +218,9 @@ export default function AuthPage() {
                     <span className="font-sans font-bold text-[11px] uppercase tracking-widest text-[#1a1c1c]">
                       Google
                     </span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="outline"
                     type="button"
                     onClick={() =>
                       showNotice(
@@ -388,7 +228,7 @@ export default function AuthPage() {
                         "Authenticating seamlessly via Apple credential networks...",
                       )
                     }
-                    className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer"
+                    className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer h-auto"
                   >
                     <svg
                       className="w-4 h-4 text-black"
@@ -400,10 +240,9 @@ export default function AuthPage() {
                     <span className="font-sans font-bold text-[11px] uppercase tracking-widest text-[#1a1c1c]">
                       Apple
                     </span>
-                  </button>
+                  </Button>
                 </div>
               </div>
-            </form>
 
             <footer className="pt-8 border-t border-[#c4c7c7] flex justify-between items-center">
               <span className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#747878]">

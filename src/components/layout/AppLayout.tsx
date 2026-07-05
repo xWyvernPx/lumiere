@@ -27,6 +27,7 @@ import {
 import { observer } from "@legendapp/state/react";
 import { themeStore, type ThemeStore } from "../../store/themeStore";
 import { motion, AnimatePresence } from "motion/react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/Select";
 
 const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,29 +80,35 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
                     <Palette className="w-4 h-4" />
                     <span>Theme</span>
                   </div>
-                  <select
-                    className="bg-[var(--background)] border border-[var(--border)] border-opacity-20 text-xs py-1 px-2 cursor-pointer outline-none focus:border-[var(--border)] transition-colors"
-                    value={themeStore.activeTheme.get()}
-                    onChange={(e) => themeStore.activeTheme.set(e.target.value as ThemeStore["activeTheme"])}
+                  <Select
+                    defaultValue={themeStore.activeTheme.get()}
+                    onValueChange={(val) => themeStore.activeTheme.set(val as ThemeStore["activeTheme"])}
                   >
-                    <option value="lumiere">Lumière</option>
-                    <option value="aura">Aura</option>
-                    <option value="midnight">Midnight</option>
-                    <option value="forest">Forest</option>
-                  </select>
+                    <SelectTrigger className="h-8 w-32 bg-[var(--background)] border-[var(--border)] border-opacity-20 text-xs">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="lumiere">Lumière</SelectItem>
+                      <SelectItem value="aura">Aura</SelectItem>
+                      <SelectItem value="midnight">Midnight</SelectItem>
+                      <SelectItem value="forest">Forest</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors flex items-center justify-between font-medium">
                   <div className="flex items-center gap-3">
                     <Globe className="w-4 h-4" />
                     <span>Language</span>
                   </div>
-                  <select
-                    className="bg-[var(--background)] border border-[var(--border)] border-opacity-20 text-xs py-1 px-2 cursor-pointer outline-none focus:border-[var(--border)] transition-colors"
-                    defaultValue="fr"
-                  >
-                    <option value="fr">Français</option>
-                    <option value="en">English</option>
-                  </select>
+                  <Select defaultValue="fr">
+                    <SelectTrigger className="h-8 w-32 bg-[var(--background)] border-[var(--border)] border-opacity-20 text-xs">
+                      <SelectValue placeholder="Language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="en">English</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
              </div>
              
