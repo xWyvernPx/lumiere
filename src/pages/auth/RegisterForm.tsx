@@ -4,6 +4,7 @@ import { registerSchema } from "./useAuth";
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 import { Checkbox } from "../../components/ui/Checkbox";
+import { Label } from "../../components/ui/Label";
 
 interface RegisterFormProps {
   onSubmit: (values: any) => Promise<void>;
@@ -12,13 +13,15 @@ interface RegisterFormProps {
 export function RegisterForm({ onSubmit }: RegisterFormProps) {
   const registerForm = useForm({
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
       remember: false,
     },
     validators: {
-      onChange: registerSchema,
+      onSubmit: registerSchema,
     },
     onSubmit: async ({ value }) => {
       await onSubmit(value);
@@ -28,13 +31,57 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); registerForm.handleSubmit(); }}>
+      <div className="grid grid-cols-2 gap-4">
+        <registerForm.Field
+          name="firstName"
+          children={(field) => (
+            <div className="space-y-2">
+              <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+                First Name
+              </Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Marie"
+                type="text"
+                required
+              />
+              {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
+            </div>
+          )}
+        />
+        <registerForm.Field
+          name="lastName"
+          children={(field) => (
+            <div className="space-y-2">
+              <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+                Last Name
+              </Label>
+              <Input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Curie"
+                type="text"
+                required
+              />
+              {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
+            </div>
+          )}
+        />
+      </div>
       <registerForm.Field
         name="email"
         children={(field) => (
           <div className="space-y-2">
-            <label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+            <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
               Email Address
-            </label>
+            </Label>
             <Input
               id={field.name}
               name={field.name}
@@ -45,7 +92,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
               type="email"
               required
             />
-            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />
@@ -53,9 +100,9 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         name="password"
         children={(field) => (
           <div className="space-y-2">
-            <label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+            <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
               Password
-            </label>
+            </Label>
             <Input
               id={field.name}
               name={field.name}
@@ -66,7 +113,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
               type="password"
               required
             />
-            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />
@@ -74,9 +121,9 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         name="confirmPassword"
         children={(field) => (
           <div className="space-y-2">
-            <label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+            <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
               Confirm Password
-            </label>
+            </Label>
             <Input
               id={field.name}
               name={field.name}
@@ -87,7 +134,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
               type="password"
               required
             />
-            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />
@@ -104,14 +151,14 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
                   onCheckedChange={(checked) => field.handleChange(checked as boolean)}
                 />
               </div>
-              <label className="font-sans font-medium text-[12px] text-[#444748]" htmlFor={field.name}>
+              <Label className="font-sans font-medium text-[12px] text-[#444748]" htmlFor={field.name}>
                 I agree to the{" "}
                 <a className="underline font-sans font-bold text-black cursor-pointer" onClick={(e) => e.preventDefault()}>Terms of Publication</a>{" "}
                 and{" "}
                 <a className="underline font-sans font-bold text-black cursor-pointer" onClick={(e) => e.preventDefault()}>Scholarly Conduct</a>.
-              </label>
+              </Label>
             </div>
-            {field.state.meta.errors ? <p className="text-red-500 text-xs ml-8">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs ml-8">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />

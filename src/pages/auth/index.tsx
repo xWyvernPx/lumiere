@@ -4,6 +4,9 @@ import { Button } from "../../components/ui/Button";
 import { useLogin, useRegister } from "./useAuth";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/Tabs";
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/Alert";
+import { authActions } from "../../stores/auth-store";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -28,13 +31,15 @@ export default function AuthPage() {
     setNotification(null);
     try {
       const response = await loginMutation.mutateAsync(value);
-      localStorage.setItem("token", response.token);
-      if (response.refreshToken) {
-        localStorage.setItem("refreshToken", response.refreshToken);
-      }
+      
+      authActions.refresh({
+        token: (response as any).data?.token || (response as any).token,
+        refreshToken: (response as any).data?.refreshToken || (response as any).refreshToken || "",
+      });
+
       showNotice("success", `Welcome back! Successfully authenticated.`);
       setTimeout(() => {
-        navigate({ to: "/" });
+        navigate({ to: "/app" });
       }, 1000);
     } catch (error: any) {
       showNotice("error", error.response?.data?.message || "Authentication failed. Please check your credentials.");
@@ -47,8 +52,8 @@ export default function AuthPage() {
       const payload = {
         email: value.email,
         password: value.password,
-        firstName: value.email.split("@")[0], // Dummy name extraction for now
-        lastName: "User",
+        firstName: value.firstName,
+        lastName: value.lastName,
       };
       await registerMutation.mutateAsync(payload);
       showNotice("success", "Your scholarly account was successfully created! You can now log in.");
@@ -79,35 +84,38 @@ export default function AuthPage() {
 
       {/* Floating Modern Notification UI (No alerts) */}
       {notification && (
-        <div
-          className={`fixed top-6 right-6 z-50 max-w-md p-4 border-4 animate-bounce transition-all ${
+        <Alert
+          variant={notification.type === "success" ? "default" : "destructive"}
+          className={`fixed top-6 right-6 z-50 max-w-md animate-bounce transition-all ${
             notification.type === "success"
-              ? "border-black bg-white text-black"
-              : "border-red-600 bg-red-50 text-red-800"
+              ? "border-4 border-black bg-white text-black"
+              : "border-4 border-red-600 bg-red-50 text-red-800"
           }`}
         >
-          <div className="flex items-start space-x-3">
+          <div className="flex items-start space-x-3 w-full">
             <span className="shrink-0 mt-0.5 text-xl font-bold">
               {notification.type === "success" ? "✓" : "!"}
             </span>
-            <div>
-              <p className="font-sans font-bold uppercase tracking-wider text-xs">
+            <div className="flex-1">
+              <AlertTitle className="font-sans font-bold uppercase tracking-wider text-xs mb-1">
                 {notification.type === "success"
                   ? "Publication Notice"
                   : "System Exception"}
-              </p>
-              <p className="text-sm font-sans font-medium mt-1">
+              </AlertTitle>
+              <AlertDescription className="text-sm font-sans font-medium">
                 {notification.message}
-              </p>
+              </AlertDescription>
             </div>
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setNotification(null)}
-              className="text-gray-400 hover:text-black transition-colors"
+              className="text-gray-400 hover:text-black transition-colors p-1 h-auto bg-transparent border-0 -mr-2 -mt-2 shrink-0"
             >
               <span className="text-sm">×</span>
-            </button>
+            </Button>
           </div>
-        </div>
+        </Alert>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[100vh]">
@@ -133,43 +141,35 @@ export default function AuthPage() {
             </header>
 
             {/* Premium Tab Toggles */}
-            <div className="flex border-b border-[#c4c7c7]">
-              <button
-                type="button"
-                className={`flex-1 py-4 text-center transition-all ${
-                  mode === "signin"
-                    ? "border-b-4 border-black text-black font-sans font-bold"
-                    : "text-[#444748] hover:text-black border-b-4 border-transparent font-sans font-medium"
-                }`}
-                onClick={() => {
-                  setMode("signin");
-                  setNotification(null);
-                }}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                className={`flex-1 py-4 text-center transition-all ${
-                  mode === "signup"
-                    ? "border-b-4 border-black text-black font-sans font-bold"
-                    : "text-[#444748] hover:text-black border-b-4 border-transparent font-sans font-medium"
-                }`}
-                onClick={() => {
-                  setMode("signup");
-                  setNotification(null);
-                }}
-              >
-                Create Account
-              </button>
-            </div>
-
-            {/* Interactive Sign-in & Sign-up Form */}
-            {mode === "signin" ? (
-              <LoginForm onSubmit={handleLoginSubmit} showNotice={showNotice} />
-            ) : (
-              <RegisterForm onSubmit={handleRegisterSubmit} />
-            )}
+            <Tabs 
+              value={mode} 
+              onValueChange={(val) => { 
+                setMode(val as "signin" | "signup"); 
+                setNotification(null);
+              }}
+              className="w-full"
+            >
+              <TabsList className="flex border-b border-[#c4c7c7] w-full">
+                <TabsTrigger
+                  value="signin"
+                  className="flex-1 py-4 text-center transition-all data-[state=active]:border-b-4 data-[state=active]:border-black data-[state=active]:text-black data-[state=active]:font-sans data-[state=active]:font-bold text-[#444748] hover:text-black border-b-4 border-transparent font-sans font-medium"
+                >
+                  Sign In
+                </TabsTrigger>
+                <TabsTrigger
+                  value="signup"
+                  className="flex-1 py-4 text-center transition-all data-[state=active]:border-b-4 data-[state=active]:border-black data-[state=active]:text-black data-[state=active]:font-sans data-[state=active]:font-bold text-[#444748] hover:text-black border-b-4 border-transparent font-sans font-medium"
+                >
+                  Create Account
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="signin" className="mt-6">
+                <LoginForm onSubmit={handleLoginSubmit} showNotice={showNotice} />
+              </TabsContent>
+              <TabsContent value="signup" className="mt-6">
+                <RegisterForm onSubmit={handleRegisterSubmit} />
+              </TabsContent>
+            </Tabs>
 
             {/* Social Login Integrations */}
               <div className="space-y-6 mt-6">
@@ -185,12 +185,9 @@ export default function AuthPage() {
                   <Button
                     variant="outline"
                     type="button"
-                    onClick={() =>
-                      showNotice(
-                        "success",
-                        "Authenticating seamlessly via Google credentials...",
-                      )
-                    }
+                    onClick={() => {
+                      window.location.href = (import.meta as any).env.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/auth/google` : "http://localhost:3000/api/v1/auth/google";
+                    }}
                     className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer h-auto"
                   >
                     <svg
@@ -222,12 +219,9 @@ export default function AuthPage() {
                   <Button
                     variant="outline"
                     type="button"
-                    onClick={() =>
-                      showNotice(
-                        "success",
-                        "Authenticating seamlessly via Apple credential networks...",
-                      )
-                    }
+                    onClick={() => {
+                      window.location.href = (import.meta as any).env.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/auth/apple` : "http://localhost:3000/api/v1/auth/apple";
+                    }}
                     className="flex items-center justify-center space-x-2 py-3 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer h-auto"
                   >
                     <svg
@@ -248,24 +242,28 @@ export default function AuthPage() {
               <span className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#747878]">
                 Issue No. 427
               </span>
-              <div className="flex space-x-6">
-                <span
+              <div className="flex space-x-6 items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={toggleLanguage}
-                  className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#444748] cursor-pointer hover:text-black flex items-center space-x-1"
+                  className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#444748] hover:text-black flex items-center p-0 h-auto bg-transparent border-0"
                 >
-                  <span>{activeLang}</span>
-                </span>
-                <span
+                  {activeLang}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() =>
                     showNotice(
                       "success",
                       "Connect with support: librarian@lumiere.edu",
                     )
                   }
-                  className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#444748] cursor-pointer hover:text-black"
+                  className="font-sans font-bold text-[10px] uppercase tracking-[0.1em] text-[#444748] hover:text-black p-0 h-auto bg-transparent border-0"
                 >
                   HELP
-                </span>
+                </Button>
               </div>
             </footer>
           </div>

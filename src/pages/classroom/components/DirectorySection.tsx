@@ -24,7 +24,7 @@ export default function DirectorySection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link to="/classroom/teacher">
+          <Link to="/app/classroom/teacher">
             <Card className="bg-[var(--primary)] text-[var(--background)] border-[var(--primary)] p-6 flex flex-col h-56 transition-colors hover:bg-neutral-800 group cursor-pointer h-full">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--background)] opacity-70 mb-4">
                 Active Cohort
@@ -49,7 +49,7 @@ export default function DirectorySection() {
             </Card>
           </Link>
 
-          <Link to="/classroom/teacher">
+          <Link to="/app/classroom/teacher">
             <Card className="bg-[var(--background)] border-[var(--border)] border-opacity-20 p-6 flex flex-col h-56 transition-colors hover:bg-[var(--code-bg)] cursor-pointer h-full">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-50 mb-4">
                 Enrolled
@@ -101,7 +101,7 @@ export default function DirectorySection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link to="/community">
+          <Link to="/app/community">
             <Card className="bg-[var(--background)] border-[var(--border)] border-opacity-20 p-6 flex flex-col h-56 transition-colors hover:bg-[var(--code-bg)] cursor-pointer h-full">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)] opacity-50 mb-4">
                 Active Member

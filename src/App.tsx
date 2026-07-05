@@ -20,11 +20,15 @@ import ActivityPage from "./pages/activity";
 import LibraryPage from "./pages/library";
 
 import AuthPage from "./pages/auth";
+import LandingPage from "./pages/landing";
 
 import { GlobalTranslation } from "./components/shared/GlobalTranslation";
 
 import AdminLayout from "./components/layout/AdminLayout";
 import AdminUserManagement from "./pages/admin/index";
+
+import { Toaster } from "sonner";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // 1. Declare the Root Route
 const rootRoute = createRootRoute({
@@ -32,14 +36,26 @@ const rootRoute = createRootRoute({
     <>
       <Outlet />
       <GlobalTranslation />
+      <Toaster position="top-right" richColors />
     </>
   ),
 });
 
+const landingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: LandingPage,
+});
+
 const appLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  id: "app",
-  component: AppLayout,
+
+  path: "/app",
+  component: () => (
+    <ProtectedRoute>
+      <AppLayout />
+    </ProtectedRoute>
+  ),
 });
 
 const authRoute = createRoute({
@@ -70,7 +86,11 @@ const teacherRoute = createRoute({
 const activityRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/activity/$activityId",
-  component: ActivityPage,
+  component: () => (
+    <ProtectedRoute>
+      <ActivityPage />
+    </ProtectedRoute>
+  ),
 });
 
 const libraryRoute = createRoute({
@@ -93,13 +113,18 @@ const archivesRoute = createRoute({
 
 const adminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
-  id: "admin",
-  component: AdminLayout,
+
+  path: "/admin",
+  component: () => (
+    <ProtectedRoute allowedRoles={["ADMIN"]}>
+      <AdminLayout />
+    </ProtectedRoute>
+  ),
 });
 
 const adminIndexRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
-  path: "/admin",
+  path: "/",
   component: AdminUserManagement,
 });
 
@@ -117,7 +142,7 @@ const adminLayoutWithChildren = adminLayoutRoute.addChildren([
   adminIndexRoute
 ]);
 
-const routeTree = rootRoute.addChildren([appLayoutWithChildren, adminLayoutWithChildren, authRoute, activityRoute]);
+const routeTree = rootRoute.addChildren([landingRoute, appLayoutWithChildren, adminLayoutWithChildren, authRoute, activityRoute]);
 
 // 4. Create the Router Instance
 const router = createRouter({ routeTree });

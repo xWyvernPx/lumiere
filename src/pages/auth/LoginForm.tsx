@@ -1,8 +1,9 @@
 import React from "react";
 import { useForm } from "@tanstack/react-form";
-import { loginSchema } from "./useAuth";
+import { loginSchema, useForgotPassword } from "./useAuth";
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
+import { Label } from "../../components/ui/Label";
 
 interface LoginFormProps {
   onSubmit: (values: any) => Promise<void>;
@@ -10,18 +11,35 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSubmit, showNotice }: LoginFormProps) {
+  const forgotPasswordMutation = useForgotPassword();
+
   const loginForm = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
     validators: {
-      onChange: loginSchema,
+      onSubmit: loginSchema,
     },
     onSubmit: async ({ value }) => {
       await onSubmit(value);
     },
   });
+
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const email = loginForm.state.values.email;
+    if (!email) {
+      showNotice("error", "Please enter your email address first to reset password.");
+      return;
+    }
+    try {
+      await forgotPasswordMutation.mutateAsync({ email });
+      showNotice("success", "Password reset instructions have been forwarded to your email inbox.");
+    } catch (error: any) {
+      showNotice("error", error.response?.data?.message || "Failed to send reset instructions.");
+    }
+  };
 
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); loginForm.handleSubmit(); }}>
@@ -29,9 +47,9 @@ export function LoginForm({ onSubmit, showNotice }: LoginFormProps) {
         name="email"
         children={(field) => (
           <div className="space-y-2">
-            <label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+            <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
               Email Address
-            </label>
+            </Label>
             <Input
               id={field.name}
               name={field.name}
@@ -42,7 +60,7 @@ export function LoginForm({ onSubmit, showNotice }: LoginFormProps) {
               type="email"
               required
             />
-            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />
@@ -51,15 +69,12 @@ export function LoginForm({ onSubmit, showNotice }: LoginFormProps) {
         children={(field) => (
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
+              <Label className="font-sans font-bold text-[10px] text-[#444748] uppercase tracking-[0.1em]" htmlFor={field.name}>
                 Password
-              </label>
+              </Label>
               <a
                 className="font-sans font-bold text-[10px] text-[#3d627b] uppercase tracking-[0.1em] hover:underline cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  showNotice("success", "Password reset instructions have been forwarded to your email inbox.");
-                }}
+                onClick={handleForgotPassword}
               >
                 Forgot?
               </a>
@@ -74,7 +89,7 @@ export function LoginForm({ onSubmit, showNotice }: LoginFormProps) {
               type="password"
               required
             />
-            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.join(", ")}</p> : null}
+            {field.state.meta.errors ? <p className="text-red-500 text-xs mt-1">{field.state.meta.errors.map((e: any) => e.message || e).join(", ")}</p> : null}
           </div>
         )}
       />

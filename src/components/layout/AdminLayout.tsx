@@ -112,7 +112,7 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              </div>
              
              <div className="p-2 border-b-2 border-[var(--border)]">
-               <Link to="/" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+               <Link to="/app" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
                  <ShieldCheck className="w-4 h-4 text-[var(--primary)]" />
                  <span className="text-[var(--primary)] font-bold">Exit Admin</span>
                </Link>

@@ -264,11 +264,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
   const [sidebarWidth, setSidebarWidth] = useState(288); // 288px = w-72
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navItems = [
-    { to: "/", label: "Practicing", icon: BookOpen },
-    { to: "/classroom", label: "The Classroom", icon: GraduationCap },
-    { to: "/community", label: "Community Desk", icon: Users },
-    { to: "/archives", label: "Saved Archives", icon: Archive },
-    { to: "/library", label: "Activities Library", icon: Library },
+    { to: "/app", label: "Practicing", icon: BookOpen },
+    { to: "/app/classroom", label: "The Classroom", icon: GraduationCap },
+    { to: "/app/community", label: "Community Desk", icon: Users },
+    { to: "/app/archives", label: "Saved Archives", icon: Archive },
+    { to: "/app/library", label: "Activities Library", icon: Library },
   ];
 
   return (

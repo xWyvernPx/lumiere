@@ -25,12 +25,12 @@ export type RegisterData = z.infer<typeof registerSchema>;
 
 const login = async (data: LoginData) => {
   const response = await apiClient.post('/auth/email/login', data);
-  return response.data;
+  return response;
 };
 
 const register = async (data: Omit<RegisterData, 'confirmPassword' | 'remember'>) => {
   const response = await apiClient.post('/auth/email/register', data);
-  return response.data;
+  return response;
 };
 
 export const useLogin = () => {
@@ -42,5 +42,22 @@ export const useLogin = () => {
 export const useRegister = () => {
   return useMutation({
     mutationFn: register,
+  });
+};
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
+
+export type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
+
+const forgotPassword = async (data: ForgotPasswordData) => {
+  const response = await apiClient.post('/auth/forgot/password', data);
+  return response.data?.id || response.data?.email ? response.data : response;
+};
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: forgotPassword,
   });
 };

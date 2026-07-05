@@ -49,7 +49,7 @@ export default function PracticingPage() {
               >
                 Resume Session <ArrowRight className="w-4 h-4 text-inherit" />
               </Button>
-              <Link to="/library">
+              <Link to="/app/library">
                 <Button
                   variant="outline"
                   size="lg"

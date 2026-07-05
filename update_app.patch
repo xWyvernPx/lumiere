@@ -1,0 +1,46 @@
+--- src/App.tsx
++++ src/App.tsx
+@@ -14,6 +14,7 @@
+ import ActivityPage from "./pages/activity";
+ import LibraryPage from "./pages/library";
+ import AuthPage from "./pages/auth";
++import LandingPage from "./pages/landing/index";
+ import { GlobalTranslation } from "./components/shared/GlobalTranslation";
+ import AdminLayout from "./components/layout/AdminLayout";
+ import AdminUserManagement from "./pages/admin/index";
+@@ -32,9 +33,16 @@
+   ),
+ });
+ 
++const landingRoute = createRoute({
++  getParentRoute: () => rootRoute,
++  path: "/",
++  component: LandingPage,
++});
++
+ const appLayoutRoute = createRoute({
+   getParentRoute: () => rootRoute,
+   id: "app",
++  path: "/app",
+   component: () => (
+     <ProtectedRoute>
+       <AppLayout />
+@@ -107,7 +115,7 @@
+ 
+ const adminIndexRoute = createRoute({
+   getParentRoute: () => adminLayoutRoute,
+-  path: "/admin",
++  path: "/",
++  component: AdminUserManagement,
++});
++
++const adminRootRoute = createRoute({
++  getParentRoute: () => rootRoute,
++  path: "/admin",
++  component: () => (
++    <ProtectedRoute allowedRoles={["ADMIN"]}>
++      <AdminLayout />
++    </ProtectedRoute>
++  ),
++});
++
