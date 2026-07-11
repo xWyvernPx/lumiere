@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   createRootRoute,
   createRoute,
@@ -9,42 +10,47 @@ import {
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 
-// Layout and Pages imports
-import AppLayout from "./components/layout/AppLayout";
-import PracticingPage from "./pages/practicing";
-import ClassroomPage from "./pages/classroom";
-import TeacherClassroom from "./pages/classroom/teacher";
-import CommunityPage from "./pages/community";
-import ArchivesPage from "./pages/archives";
-import RoadmapPage from "./pages/roadmap";
-import ActivityPage from "./pages/activity";
-import LibraryPage from "./pages/library";
-import AccountPage from "./pages/account";
-import HardwarePage from "./pages/account/hardware";
-import PrivacyPage from "./pages/account/privacy";
-import NotificationsPage from "./pages/account/notifications";
-
-import AuthPage from "./pages/auth";
+// Eager: the landing page is the initial route (first paint), plus the small
+// always-mounted app shell. Everything else is code-split below.
 import LandingPage from "./pages/landing";
-
 import { GlobalTranslation } from "./components/shared/GlobalTranslation";
-
-import AdminLayout from "./components/layout/AdminLayout";
-import AdminUserManagement from "./pages/admin/index";
-import AdminLanguagesPage from "./pages/admin/languages";
-import AdminActivitiesPage from "./pages/admin/activities/index";
-import AdminActivitiesEditPage from "./pages/admin/activities/edit";
-import AdminOperationsPage from "./pages/admin/operations";
-import AdminAiSystemsPage from "./pages/admin/ai-systems";
-
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { RouteFallback } from "./components/shared/RouteFallback";
+
+// Lazy: each route chunk loads on demand. Auth is split too so the Google /
+// Facebook / Apple OAuth SDKs stay out of the initial bundle.
+const AuthPage = lazy(() => import("./pages/auth"));
+const AppLayout = lazy(() => import("./components/layout/AppLayout"));
+const AdminLayout = lazy(() => import("./components/layout/AdminLayout"));
+
+const PracticingPage = lazy(() => import("./pages/practicing"));
+const ClassroomPage = lazy(() => import("./pages/classroom"));
+const TeacherClassroom = lazy(() => import("./pages/classroom/teacher"));
+const CommunityPage = lazy(() => import("./pages/community"));
+const ArchivesPage = lazy(() => import("./pages/archives"));
+const RoadmapPage = lazy(() => import("./pages/roadmap"));
+const ActivityPage = lazy(() => import("./pages/activity"));
+const LibraryPage = lazy(() => import("./pages/library"));
+const AccountPage = lazy(() => import("./pages/account"));
+const HardwarePage = lazy(() => import("./pages/account/hardware"));
+const PrivacyPage = lazy(() => import("./pages/account/privacy"));
+const NotificationsPage = lazy(() => import("./pages/account/notifications"));
+
+const AdminUserManagement = lazy(() => import("./pages/admin/index"));
+const AdminLanguagesPage = lazy(() => import("./pages/admin/languages"));
+const AdminActivitiesPage = lazy(() => import("./pages/admin/activities/index"));
+const AdminActivitiesEditPage = lazy(() => import("./pages/admin/activities/edit"));
+const AdminOperationsPage = lazy(() => import("./pages/admin/operations"));
+const AdminAiSystemsPage = lazy(() => import("./pages/admin/ai-systems"));
 
 // 1. Declare the Root Route
 const rootRoute = createRootRoute({
   component: () => (
     <>
-      <Outlet />
+      <Suspense fallback={<RouteFallback fullScreen />}>
+        <Outlet />
+      </Suspense>
       <GlobalTranslation />
       <Toaster position="top-right" richColors />
     </>

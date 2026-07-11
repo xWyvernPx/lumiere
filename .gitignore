@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# This project uses pnpm — don't commit other package managers' lockfiles
+package-lock.json
+yarn.lock

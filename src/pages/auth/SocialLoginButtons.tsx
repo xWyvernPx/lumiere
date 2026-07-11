@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import FacebookLogin from "@greatsumini/react-facebook-login";
 import AppleSignin from "react-apple-signin-auth";
 import { Button } from "../../components/ui/Button";
 import { useSocialLogin } from "./useAuth";
@@ -74,18 +74,19 @@ const InnerButtons = ({ showNotice }: SocialLoginButtonsProps) => {
         {/* Facebook */}
         <FacebookLogin
           appId={(import.meta as any).env.VITE_FACEBOOK_APP_ID || "dummy_facebook_app_id"}
-          callback={(response: any) => {
+          onSuccess={(response) => {
             if (response.accessToken) {
               handleSocialSuccess('facebook', { accessToken: response.accessToken });
             } else {
               showNotice("error", "Facebook login failed");
             }
           }}
-          render={(renderProps: any) => (
+          onFail={() => showNotice("error", "Facebook login failed")}
+          render={({ onClick }) => (
             <Button
               variant="outline"
               type="button"
-              onClick={renderProps.onClick}
+              onClick={onClick}
               className="w-full h-[52px] flex items-center justify-center space-x-2 border-4 border-black bg-white hover:bg-[#eeeeee] transition-colors cursor-pointer"
             >
               <svg className="w-4 h-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">

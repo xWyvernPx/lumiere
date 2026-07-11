@@ -21,6 +21,10 @@
       ]
     },
     "allowImportingTsExtensions": true,
+    // TypeScript 7 defaults `strict` to true. This project has only ever
+    // enforced strictNullChecks, so pin strict off to keep the upgrade a pure
+    // compiler bump. Adopting full strict mode is a separate, opt-in cleanup.
+    "strict": false,
     "strictNullChecks": true,
     "noEmit": true
   }

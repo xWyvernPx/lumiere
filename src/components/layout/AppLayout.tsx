@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { Outlet, Link, useRouter, useRouterState, useNavigate } from "@tanstack/react-router";
+import { RouteFallback } from "../shared/RouteFallback";
 import { useStore } from "@tanstack/react-store";
 import { authStore, authActions, selectUser } from "../../stores/auth-store";
 import { Settings,
@@ -467,7 +468,9 @@ export default function AppLayout() {
               transition={{ duration: 0.2 }}
               className="h-full"
             >
-              <Outlet />
+              <Suspense fallback={<RouteFallback />}>
+                <Outlet />
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </div>

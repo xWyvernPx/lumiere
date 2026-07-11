@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Outlet, Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { RouteFallback } from "../shared/RouteFallback";
 import {
   Settings,
   X,
@@ -432,7 +433,9 @@ export default function AdminLayout() {
               transition={{ duration: 0.2 }}
               className="h-full"
             >
-              <Outlet />
+              <Suspense fallback={<RouteFallback />}>
+                <Outlet />
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </div>
