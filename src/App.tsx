@@ -16,8 +16,13 @@ import ClassroomPage from "./pages/classroom";
 import TeacherClassroom from "./pages/classroom/teacher";
 import CommunityPage from "./pages/community";
 import ArchivesPage from "./pages/archives";
+import RoadmapPage from "./pages/roadmap";
 import ActivityPage from "./pages/activity";
 import LibraryPage from "./pages/library";
+import AccountPage from "./pages/account";
+import HardwarePage from "./pages/account/hardware";
+import PrivacyPage from "./pages/account/privacy";
+import NotificationsPage from "./pages/account/notifications";
 
 import AuthPage from "./pages/auth";
 import LandingPage from "./pages/landing";
@@ -26,6 +31,11 @@ import { GlobalTranslation } from "./components/shared/GlobalTranslation";
 
 import AdminLayout from "./components/layout/AdminLayout";
 import AdminUserManagement from "./pages/admin/index";
+import AdminLanguagesPage from "./pages/admin/languages";
+import AdminActivitiesPage from "./pages/admin/activities/index";
+import AdminActivitiesEditPage from "./pages/admin/activities/edit";
+import AdminOperationsPage from "./pages/admin/operations";
+import AdminAiSystemsPage from "./pages/admin/ai-systems";
 
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -99,6 +109,30 @@ const libraryRoute = createRoute({
   component: LibraryPage,
 });
 
+const accountRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/account",
+  component: AccountPage,
+});
+
+const accountHardwareRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/account/hardware",
+  component: HardwarePage,
+});
+
+const accountPrivacyRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/account/privacy",
+  component: PrivacyPage,
+});
+
+const accountNotificationsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/account/notifications",
+  component: NotificationsPage,
+});
+
 const communityRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: "/community",
@@ -109,6 +143,12 @@ const archivesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: "/archives",
   component: ArchivesPage,
+});
+
+const roadmapRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/roadmap",
+  component: RoadmapPage,
 });
 
 const adminLayoutRoute = createRoute({
@@ -128,18 +168,58 @@ const adminIndexRoute = createRoute({
   component: AdminUserManagement,
 });
 
+const adminLanguagesRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/languages",
+  component: AdminLanguagesPage,
+});
+
+const adminActivitiesRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/activities",
+  component: AdminActivitiesPage,
+});
+
+const adminActivitiesEditRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/activities/edit",
+  component: AdminActivitiesEditPage,
+});
+
+const adminOperationsRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/operations",
+  component: AdminOperationsPage,
+});
+
+const adminAiSystemsRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/ai-systems",
+  component: AdminAiSystemsPage,
+});
+
 // 3. Assemble the Route Tree
 const appLayoutWithChildren = appLayoutRoute.addChildren([
   indexRoute,
+  roadmapRoute,
   classroomRoute,
   teacherRoute,
   communityRoute,
   archivesRoute,
   libraryRoute,
+  accountRoute,
+  accountHardwareRoute,
+  accountPrivacyRoute,
+  accountNotificationsRoute,
 ]);
 
 const adminLayoutWithChildren = adminLayoutRoute.addChildren([
-  adminIndexRoute
+  adminIndexRoute,
+  adminLanguagesRoute,
+  adminActivitiesRoute,
+  adminActivitiesEditRoute,
+  adminOperationsRoute,
+  adminAiSystemsRoute,
 ]);
 
 const routeTree = rootRoute.addChildren([landingRoute, appLayoutWithChildren, adminLayoutWithChildren, authRoute, activityRoute]);

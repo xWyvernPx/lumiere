@@ -55,6 +55,10 @@ apiClient.interceptors.response.use(
       originalRequest?.url?.includes("/auth/email/login") ||
       originalRequest?.url?.includes("/auth/refresh");
 
+    if (import.meta.env.VITE_MOCKING_LOGIN === "true") {
+       return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest?._retry && !isAuthEndpoint) {
       if (isRefreshing) {
         // Wait for refresh to complete

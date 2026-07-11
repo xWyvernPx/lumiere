@@ -62,8 +62,11 @@ export const useForgotPassword = () => {
   });
 };
 
-export const socialLogin = async (data: { provider: string, token: string }) => {
-  const response = await apiClient.post(`/auth/${data.provider}/login`, { token: data.token });
+export const socialLogin = async (data: { provider: string, idToken?: string, accessToken?: string }) => {
+  const payload = data.provider === 'facebook' 
+    ? { accessToken: data.accessToken } 
+    : { idToken: data.idToken };
+  const response = await apiClient.post(`/auth/${data.provider}/login`, payload);
   return response.data?.id || response.data?.email || response.data?.token ? response.data : response;
 };
 

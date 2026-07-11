@@ -1,49 +1,7 @@
-import React from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import AppleSignin from "react-apple-signin-auth";
-import { Button } from "../../components/ui/Button";
-import { useSocialLogin } from "./useAuth";
-import { authActions } from "../../stores/auth-store";
-import { useNavigate } from "@tanstack/react-router";
+with open("src/pages/auth/SocialLoginButtons.tsx", "r") as f:
+    c = f.read()
 
-interface SocialLoginButtonsProps {
-  showNotice: (type: "success" | "error", message: string) => void;
-}
-
-const InnerButtons = ({ showNotice }: SocialLoginButtonsProps) => {
-  const socialLoginMutation = useSocialLogin();
-  const navigate = useNavigate();
-
-  const handleSocialSuccess = async (provider: string, data: { idToken?: string, accessToken?: string }) => {
-    try {
-      const response = await socialLoginMutation.mutateAsync({ provider, ...data });
-      
-      authActions.refresh({
-        token: response.token || (response as any).data?.token,
-        refreshToken: response.refreshToken || (response as any).data?.refreshToken || "",
-      });
-      showNotice("success", `Successfully authenticated via ${provider}.`);
-      setTimeout(() => {
-        navigate({ to: "/app" });
-      }, 1000);
-    } catch (error: any) {
-      showNotice("error", error.response?.data?.message || `Authentication via ${provider} failed.`);
-    }
-  };
-
-
-
-  return (
-    <div className="space-y-6 mt-6">
-      <div className="relative flex items-center py-2">
-        <div className="flex-grow border-t border-[#c4c7c7]"></div>
-        <span className="flex-shrink mx-4 font-sans font-bold text-[10px] uppercase tracking-widest text-[#444748]">
-          Or Continue Via
-        </span>
-        <div className="flex-grow border-t border-[#c4c7c7]"></div>
-      </div>
-            <div className="grid grid-cols-1 gap-4">
+new_buttons = """      <div className="grid grid-cols-1 gap-4">
         {/* Google */}
         <div className="relative w-full h-[52px] group overflow-hidden">
           <Button
@@ -123,15 +81,11 @@ const InnerButtons = ({ showNotice }: SocialLoginButtonsProps) => {
             </Button>
           )}
         />
-      </div>
-    </div>
-  );
-};
+      </div>"""
 
-export const SocialLoginButtons = ({ showNotice }: SocialLoginButtonsProps) => {
-  return (
-    <GoogleOAuthProvider clientId={(import.meta as any).env.VITE_GOOGLE_CLIENT_ID || "dummy_google_client_id.apps.googleusercontent.com"}>
-      <InnerButtons showNotice={showNotice} />
-    </GoogleOAuthProvider>
-  );
-};
+import re
+c = re.sub(r'<div className="grid grid-cols-1 gap-3">.*?</div>\s*</div>', new_buttons + "\n    </div>", c, flags=re.DOTALL)
+
+with open("src/pages/auth/SocialLoginButtons.tsx", "w") as f:
+    f.write(c)
+

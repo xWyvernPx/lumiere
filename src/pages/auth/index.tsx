@@ -18,6 +18,19 @@ export default function AuthPage() {
   const [activeLang, setActiveLang] = useState("FR");
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    if (import.meta.env.VITE_MOCKING_LOGIN === "true") {
+      authActions.setUser({
+        id: "mock-user-123",
+        email: "mockuser@example.com",
+        firstName: "Mock",
+        lastName: "User",
+        role: { name: "ADMIN" },
+      });
+      navigate({ to: "/app" });
+    }
+  }, [navigate]);
+
   const loginMutation = useLogin();
   const registerMutation = useRegister();
 

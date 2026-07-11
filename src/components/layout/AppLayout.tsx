@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Outlet, Link, useRouter, useRouterState } from "@tanstack/react-router";
-import {
-  Settings,
+import { Outlet, Link, useRouter, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useStore } from "@tanstack/react-store";
+import { authStore, authActions, selectUser } from "../../stores/auth-store";
+import { Settings,
   X,
   Menu,
   Flame,
@@ -23,7 +24,7 @@ import {
   BookOpen,
   ChevronsLeft,
   ChevronsRight
-} from "lucide-react";
+, Route } from "lucide-react";
 import { observer } from "@legendapp/state/react";
 import { themeStore, type ThemeStore } from "../../store/themeStore";
 import { motion, AnimatePresence } from "motion/react";
@@ -32,6 +33,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const user = useStore(authStore, selectUser);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    authActions.logout();
+    navigate({ to: "/auth" });
+  };
+
+  const userInitials = user ? `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`.toUpperCase() : "SJ";
+  const fullName = user ? `${user.firstName} ${user.lastName}` : "Sarah Jenkins";
+  const email = user?.email || "sarah@school.edu";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,11 +70,11 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              {/* Header */}
              <div className="p-4 border-b-2 border-[var(--border)] flex items-center gap-3">
                 <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
-                  SJ
+                  {userInitials}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <h4 className="text-sm font-bold text-[var(--foreground)] truncate">Sarah Jenkins</h4>
-                  <p className="text-xs text-[var(--foreground)] opacity-60 truncate">sarah@school.edu</p>
+                  <h4 className="text-sm font-bold text-[var(--foreground)] truncate">{fullName}</h4>
+                  <p className="text-xs text-[var(--foreground)] opacity-60 truncate">{email}</p>
                 </div>
              </div>
              {/* Action Items */}
@@ -113,10 +125,10 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              </div>
              
              <div className="p-2 border-b-2 border-[var(--border)]">
-               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+               <Link to="/app/account" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
                  <ShieldCheck className="w-4 h-4" />
                  <span>Account</span>
-               </button>
+               </Link>
                <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
                  <CreditCard className="w-4 h-4" />
                  <span>Billing</span>
@@ -128,14 +140,28 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
              </div>
              
              <div className="p-2 border-b-2 border-[var(--border)]">
-               <Link to="/admin" className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+               <button 
+                 onClick={(e) => {
+                   e.preventDefault();
+                   if (user) {
+                     authActions.setUser({ ...user, role: { name: 'ADMIN', permissions: [] } });
+                     setTimeout(() => {
+                        navigate({ to: '/admin' });
+                     }, 0);
+                   }
+                 }}
+                 className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium"
+               >
                  <ShieldCheck className="w-4 h-4 text-blue-600" />
                  <span className="text-blue-600 font-bold">Admin Dashboard</span>
-               </Link>
+               </button>
              </div>
              
              <div className="p-2">
-               <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium">
+               <button 
+                 onClick={handleLogout}
+                 className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--code-bg)] hover:text-[var(--accent)] transition-colors text-left font-medium"
+               >
                  <LogOut className="w-4 h-4" />
                  <span>Log out</span>
                </button>
@@ -149,16 +175,16 @@ const UserProfileMenu = observer(({ isCollapsed }: { isCollapsed?: boolean }) =>
         className={`p-2 hover:bg-[var(--code-bg)] transition-colors flex items-center gap-3 border border-transparent hover:border-[var(--border)] hover:border-opacity-20 ${isCollapsed ? 'justify-center w-full' : 'w-full'}`}
       >
         <div className="w-10 h-10 border border-[var(--border)] bg-[var(--code-bg)] text-[var(--foreground)] font-serif italic text-lg flex items-center justify-center shrink-0">
-          SJ
+          {userInitials}
         </div>
         {!isCollapsed && (
           <>
             <div className="flex-1 text-left overflow-hidden">
               <h4 className="text-sm font-bold text-[var(--foreground)] truncate">
-                Sarah Jenkins
+                {fullName}
               </h4>
               <p className="text-xs text-[var(--foreground)] opacity-60 truncate">
-                sarah@school.edu
+                {email}
               </p>
             </div>
             <ChevronsUpDown className="w-4 h-4 text-[var(--foreground)] opacity-60 shrink-0" />
@@ -265,6 +291,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navItems = [
     { to: "/app", label: "Practicing", icon: BookOpen },
+    { to: "/app/roadmap", label: "The Curriculum Flow", icon: Route },
     { to: "/app/classroom", label: "The Classroom", icon: GraduationCap },
     { to: "/app/community", label: "Community Desk", icon: Users },
     { to: "/app/archives", label: "Saved Archives", icon: Archive },

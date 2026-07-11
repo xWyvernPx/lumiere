@@ -15,6 +15,8 @@ type Props = {
   allowedRoles?: string[];
 };
 
+const MOCKING_LOGIN = import.meta.env.VITE_MOCKING_LOGIN === "true";
+
 const ProtectedRoute = ({
   allowedRoles,
   children,
@@ -29,6 +31,21 @@ const ProtectedRoute = ({
   useEffect(() => {
     const verifyAuth = async () => {
       const currentPath = window.location.pathname;
+      
+      if (MOCKING_LOGIN) {
+        if (!user) {
+          authActions.setUser({
+            id: "mock-user-123",
+            email: "mockuser@example.com",
+            firstName: "Mock",
+            lastName: "User",
+            role: { name: "ADMIN" }
+          });
+        }
+        setIsChecking(false);
+        return;
+      }
+
 
       if (isAuthenticated && currentPath === "/auth") {
         navigate({ to: "/app" });
