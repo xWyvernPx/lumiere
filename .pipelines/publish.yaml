@@ -1,0 +1,58 @@
+trigger:
+  - main
+  - master
+  - develop
+
+pool:
+  name: 'Homelab-agent'
+
+variables:
+  - group: cloudflare-creds
+  - group: Lumiere-App
+  - name: CLOUDFLARE_PAGE_PROJECT_NAME
+    value: lumiere-dev
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '23.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      corepack enable
+      corepack prepare pnpm@latest --activate
+    displayName: 'Enable Corepack & pnpm'
+
+  - script: |
+      pnpm config set store-dir $(pnpm_store_path)
+      # Use --recursive to ensure all sub-folders are installed
+      pnpm install --recursive --no-frozen-lockfile
+    displayName: 'Install Workspace Dependencies'
+
+  - script: |
+      pnpm run build
+    displayName: 'Build Project'
+    env:
+      VITE_API_URL: $(VITE_API_URL)
+      VITE_GOOGLE_CLIENT_ID: $(VITE_GOOGLE_CLIENT_ID)
+      VITE_FACEBOOK_APP_ID: $(VITE_FACEBOOK_APP_ID)
+      VITE_APPLE_CLIENT_ID: $(VITE_APPLE_CLIENT_ID)
+      VITE_APPLE_REDIRECT_URI: $(VITE_APPLE_REDIRECT_URI)
+      VITE_MOCKING_LOGIN: $(VITE_MOCKING_LOGIN)
+
+  - script: |
+      # Check where your files actually ended up. 
+      # Since your build script runs Vite and Astro separately, 
+      # ensure the final output is in the folder you specify below.
+      npx wrangler pages deploy ./dist \
+        --project-name=$(CLOUDFLARE_PAGE_PROJECT_NAME) \
+        --branch=$(Build.SourceBranchName)
+    displayName: 'Deploy to Cloudflare'
+    env:
+      CLOUDFLARE_API_TOKEN: $(CLOUDFLARE_API_TOKEN)
+      CLOUDFLARE_ACCOUNT_ID: $(CLOUDFLARE_ACCOUNT_ID)
+
+  - script: |
+      pnpm store prune
+    displayName: 'Clean up pnpm store'
+    condition: always()
