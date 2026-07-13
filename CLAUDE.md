@@ -84,6 +84,8 @@ Setting `VITE_MOCKING_LOGIN=true` bypasses real auth: `ProtectedRoute` injects a
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth client id |
 | `VITE_FACEBOOK_APP_ID` | Facebook login app id |
 | `VITE_APPLE_CLIENT_ID` / `VITE_APPLE_REDIRECT_URI` | Apple sign-in config |
+| `VITE_COUCHDB_URL` / `VITE_COUCHDB_DB` | CouchDB base URL + activities database, for reading activity content directly (server ADR-0003) |
+| `VITE_COUCHDB_USERNAME` / `VITE_COUCHDB_PASSWORD` | Shared read-only CouchDB credential (HTTP Basic); must match the server's `COUCHDB_READER_*` |
 | `GEMINI_API_KEY` | Referenced by README for AI Studio features |
 
 See `.env.example`. The API contract is documented in `docs/api-1.yaml`. `docs/AUTH_GET_STARTED.md` covers **backend** OAuth provider setup (Google/Apple client secrets, `.p8` keys, Firebase) — not the frontend `VITE_*` vars.
