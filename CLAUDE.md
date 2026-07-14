@@ -18,7 +18,7 @@ pnpm clean        # rm -rf dist server.js
 ```
 
 - **This project uses pnpm** (`packageManager: pnpm@10.26.1` in `package.json`; only `pnpm-lock.yaml` is committed). Don't run `npm install` — it would create a stray `package-lock.json`.
-- **`.npmrc` sets `strict-peer-dependencies=false`** (committed) so install tolerates one intentional unmet peer: `i18next` lists an optional `typescript@"^5 || ^6"` peer while the project is on TS 7. (pnpm's default is already lenient; this is explicit insurance against a stricter global config.)
+- **`.npmrc`** declares the `@le-cogito` Azure Artifacts feed for the contract package. (The former `strict-peer-dependencies=false` was removed — the flag is deprecated in pnpm 10, and pnpm's default already tolerates the one intentional unmet peer: `i18next`'s optional `typescript@"^5 || ^6"` peer while the project is on TS 7.)
 - pnpm 10 blocks dependency build scripts by default, so installs log an "Ignored build scripts" warning (`esbuild`, `@google/genai`, `protobufjs`). Benign — build and type-check both pass. Use `pnpm approve-builds` only if a dependency's postinstall is actually required.
 - **There is no test framework, ESLint, or Prettier configured.** `pnpm lint` runs `tsc --noEmit`; run it after changes to verify types. Match existing code style manually.
 - **TypeScript 7** (`~7.0.2`, the native Go compiler) via the standard `typescript` package / `tsc` binary. `tsconfig.json` pins `"strict": false` on purpose — TS7 defaults `strict` to `true`, but this project has only ever enforced `strictNullChecks`. Enabling full strict mode is a deliberate, separate cleanup, not part of the compiler bump.
