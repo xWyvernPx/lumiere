@@ -3,9 +3,9 @@
 **Target repo:** `Netgang.Component.Lumiere.WebUI`.
 
 **What to build:** A learner can open a `shadowing` activity, listen to the model utterance (required audio
-stimulus), and submit their spoken response, validated before submit — reusing the ticket-04 scaffolding.
+stimulus), and submit their spoken response, validated before submit — reusing the ticket-09 scaffolding.
 
-**Blocked by:** 04 — WebUI: `multiple_choice` end-to-end + dynamic-render harness.
+**Blocked by:** 09 — WebUI: render `multiple_choice` from CouchDB + retire the prototype (dynamic-render scaffolding).
 
 **Status:** ready-for-agent
 

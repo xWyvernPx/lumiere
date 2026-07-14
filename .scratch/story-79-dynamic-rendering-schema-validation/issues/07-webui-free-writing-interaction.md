@@ -4,9 +4,9 @@
 
 **What to build:** A learner can open a `free_writing` activity, write prose in response to the prompt (over an
 optional text/image stimulus) with a live word count against the item's bounds, and have their answer validated
-before submit — reusing the ticket-04 scaffolding.
+before submit — reusing the ticket-09 scaffolding.
 
-**Blocked by:** 04 — WebUI: `multiple_choice` end-to-end + dynamic-render harness.
+**Blocked by:** 09 — WebUI: render `multiple_choice` from CouchDB + retire the prototype (dynamic-render scaffolding).
 
 **Status:** ready-for-agent
 

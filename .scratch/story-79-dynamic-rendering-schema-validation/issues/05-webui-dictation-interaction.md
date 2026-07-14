@@ -3,9 +3,9 @@
 **Target repo:** `Netgang.Component.Lumiere.WebUI`.
 
 **What to build:** A learner can open a `dictation` activity, listen to the required audio stimulus, type what
-they hear, and have their transcript validated before submit — reusing the scaffolding built in ticket 04.
+they hear, and have their transcript validated before submit — reusing the scaffolding built in ticket 09.
 
-**Blocked by:** 04 — WebUI: `multiple_choice` end-to-end + dynamic-render harness.
+**Blocked by:** 09 — WebUI: render `multiple_choice` from CouchDB + retire the prototype (dynamic-render scaffolding).
 
 **Status:** ready-for-agent
 
