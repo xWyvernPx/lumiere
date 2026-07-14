@@ -1,10 +1,24 @@
 import type { ErrorObject } from 'ajv';
+import i18n from 'i18next';
 
 /** `{ field: message }` — the learner-facing shape the UI renders. */
 export type FieldErrors = Record<string, string>;
 
 /** Key for an error anchored at the document root (empty instancePath). */
 export const ROOT_FIELD = '(racine)';
+
+/**
+ * Resolve an `errors.validation.*` i18next key, falling back to the French
+ * default when i18n isn't configured — same graceful pattern as apiClient.
+ */
+export const translateValidation = (
+  key: string,
+  fallback: string,
+  params?: Record<string, unknown>,
+): string => {
+  const fullKey = `errors.validation.${key}`;
+  return i18n.exists(fullKey) ? i18n.t(fullKey, params ?? {}) : fallback;
+};
 
 /**
  * ajv reports the *containing* path for a missing required property, so append
@@ -25,39 +39,58 @@ const toFieldPath = (error: ErrorObject): string => {
   return base || ROOT_FIELD;
 };
 
-/** ajv keyword → concise French message; falls back to ajv's own message. */
-const toFrenchMessage = (error: ErrorObject): string => {
+/** ajv keyword → learner message via i18next (French fallback + interpolation params). */
+const toMessage = (error: ErrorObject): string => {
   const params = error.params as Record<string, unknown>;
+  const t = translateValidation;
 
   switch (error.keyword) {
     case 'required':
-      return 'Ce champ est requis.';
+      return t('required', 'Ce champ est requis.');
     case 'type':
-      return `Type invalide (attendu : ${String(params.type ?? 'autre')}).`;
+      return t('type', `Type invalide (attendu : ${String(params.type ?? 'autre')}).`, {
+        type: params.type,
+      });
     case 'enum':
-      return 'Valeur non autorisée.';
+      return t('enum', 'Valeur non autorisée.');
     case 'const':
-      return 'Valeur inattendue.';
+      return t('const', 'Valeur inattendue.');
     case 'minLength':
-      return `Trop court (minimum ${String(params.limit)} caractères).`;
+      return t('minLength', `Trop court (minimum ${String(params.limit)} caractères).`, {
+        limit: params.limit,
+      });
     case 'maxLength':
-      return `Trop long (maximum ${String(params.limit)} caractères).`;
+      return t('maxLength', `Trop long (maximum ${String(params.limit)} caractères).`, {
+        limit: params.limit,
+      });
     case 'minItems':
-      return `Trop peu d’éléments (minimum ${String(params.limit)}).`;
+      return t('minItems', `Trop peu d’éléments (minimum ${String(params.limit)}).`, {
+        limit: params.limit,
+      });
     case 'maxItems':
-      return `Trop d’éléments (maximum ${String(params.limit)}).`;
+      return t('maxItems', `Trop d’éléments (maximum ${String(params.limit)}).`, {
+        limit: params.limit,
+      });
     case 'minimum':
-      return `Valeur trop petite (minimum ${String(params.limit)}).`;
+      return t('minimum', `Valeur trop petite (minimum ${String(params.limit)}).`, {
+        limit: params.limit,
+      });
     case 'maximum':
-      return `Valeur trop grande (maximum ${String(params.limit)}).`;
+      return t('maximum', `Valeur trop grande (maximum ${String(params.limit)}).`, {
+        limit: params.limit,
+      });
     case 'additionalProperties':
-      return `Propriété non autorisée : « ${String(
-        params.additionalProperty,
-      )} ».`;
+      return t(
+        'additionalProperties',
+        `Propriété non autorisée : « ${String(params.additionalProperty)} ».`,
+        { property: params.additionalProperty },
+      );
     case 'format':
-      return `Format invalide (${String(params.format)}).`;
+      return t('format', `Format invalide (${String(params.format)}).`, {
+        format: params.format,
+      });
     default:
-      return error.message ?? 'Valeur invalide.';
+      return error.message ?? t('fallback', 'Valeur invalide.');
   }
 };
 
@@ -68,7 +101,7 @@ const toFrenchMessage = (error: ErrorObject): string => {
 export const mapAjvErrors = (errors: readonly ErrorObject[]): FieldErrors =>
   errors.reduce<FieldErrors>((accumulator, error) => {
     const field = toFieldPath(error);
-    const message = toFrenchMessage(error);
+    const message = toMessage(error);
 
     return {
       ...accumulator,

@@ -2,7 +2,12 @@ import Ajv2020, { type ValidateFunction } from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import type { JsonSchema } from '@le-cogito/lumiere-activity-schemas';
 
-import { mapAjvErrors, ROOT_FIELD, type FieldErrors } from './ajvErrorMapper';
+import {
+  mapAjvErrors,
+  ROOT_FIELD,
+  translateValidation,
+  type FieldErrors,
+} from './ajvErrorMapper';
 
 /** Outcome of validating a payload against an activity contract schema. */
 export interface ValidationResult {
@@ -63,7 +68,15 @@ export const validate = (
   const validateFn = getValidator(schema);
 
   if (!validateFn) {
-    return { valid: false, errors: { [ROOT_FIELD]: 'Schéma d’activité invalide.' } };
+    return {
+      valid: false,
+      errors: {
+        [ROOT_FIELD]: translateValidation(
+          'invalidSchema',
+          'Schéma d’activité invalide.',
+        ),
+      },
+    };
   }
 
   if (validateFn(payload)) {
