@@ -7,10 +7,7 @@ export type FieldErrors = Record<string, string>;
 /** Key for an error anchored at the document root (empty instancePath). */
 export const ROOT_FIELD = '(racine)';
 
-/**
- * Resolve an `errors.validation.*` i18next key, falling back to the French
- * default when i18n isn't configured — same graceful pattern as apiClient.
- */
+/** `errors.validation.*` via i18n, French fallback when unconfigured (apiClient pattern). */
 export const translateValidation = (
   key: string,
   fallback: string,
@@ -20,11 +17,7 @@ export const translateValidation = (
   return i18n.exists(fullKey) ? i18n.t(fullKey, params ?? {}) : fallback;
 };
 
-/**
- * ajv reports the *containing* path for a missing required property, so append
- * the missing key to point the field path at the field itself. Mirrors the
- * server's ajv-error.mapper.
- */
+/** ajv reports the containing path for `required`; append the missing key. */
 const toFieldPath = (error: ErrorObject): string => {
   const base = error.instancePath.replace(/^\//, '').replace(/\//g, '.');
 
@@ -94,10 +87,7 @@ const toMessage = (error: ErrorObject): string => {
   }
 };
 
-/**
- * Maps ajv errors to a `{ field: message }` envelope with French-friendly
- * messages, concatenating multiple messages for the same field.
- */
+/** ajv errors → `{ field: message }`, joining multiple messages per field. */
 export const mapAjvErrors = (errors: readonly ErrorObject[]): FieldErrors =>
   errors.reduce<FieldErrors>((accumulator, error) => {
     const field = toFieldPath(error);
