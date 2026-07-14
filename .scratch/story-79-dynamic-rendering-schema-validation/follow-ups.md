@@ -19,3 +19,15 @@ read every learner's submissions**. Before that work starts, decide the read-iso
 
 Then revisit ADR-0003. This blocks nothing in story-79; it is a gate on the future submission-persistence
 story.
+
+## 2. Bootstrap i18next (init + translation resources)
+
+The WebUI imports i18next but never `init()`s it and ships **no resource files**, so all `i18n.t()` /
+`i18n.exists()` calls fall back — apiClient's `errors.*` and the ticket-08 validator's `errors.validation.*`
+both currently render hardcoded fallback strings (French for the validator).
+
+Wire it as its own task: `i18n.use(initReactI18next).init({ resources, lng: 'fr', fallbackLng })` imported once
+in `main.tsx`, plus `src/i18n/{fr,en}.json` housing the keys — the existing `errors.*` (accessDenied,
+errorTitle, notFound, …) and the new `errors.validation.*` (required, type, minLength, minItems,
+additionalProperties, format, invalidSchema, …). Until then the fallbacks keep the UI working. Not gating
+story-79.
