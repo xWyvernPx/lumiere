@@ -11,14 +11,22 @@ export const multipleChoiceContent = {
   item: {
     stem: 'Quelle est la capitale de la France ?',
     options: [
-      { id: 'lyon', text: 'Lyon' },
+      {
+        id: 'lyon',
+        text: 'Lyon',
+        explanation: 'Lyon est une grande ville, mais ce n’est pas la capitale.',
+      },
       {
         id: 'paris',
         text: 'Paris',
         explanation:
           'Paris est la capitale de la France, mentionnée dans le texte.',
       },
-      { id: 'marseille', text: 'Marseille' },
+      {
+        id: 'marseille',
+        text: 'Marseille',
+        explanation: 'Marseille est un grand port, mais pas la capitale.',
+      },
     ],
     correctOptionId: 'paris',
   },

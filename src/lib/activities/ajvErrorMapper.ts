@@ -7,6 +7,22 @@ export type FieldErrors = Record<string, string>;
 /** Key for an error anchored at the document root (empty instancePath). */
 export const ROOT_FIELD = '(racine)';
 
+/** French fallbacks by ajv keyword; the real strings live in i18n `errors.validation.*`. */
+const FALLBACKS: Record<string, string> = {
+  required: 'Ce champ est requis.',
+  type: 'Type invalide.',
+  enum: 'Valeur non autorisée.',
+  const: 'Valeur inattendue.',
+  minLength: 'Trop court.',
+  maxLength: 'Trop long.',
+  minItems: 'Trop peu d’éléments.',
+  maxItems: 'Trop d’éléments.',
+  minimum: 'Valeur trop petite.',
+  maximum: 'Valeur trop grande.',
+  additionalProperties: 'Propriété non autorisée.',
+  format: 'Format invalide.',
+};
+
 /** `errors.validation.*` via i18n, French fallback when unconfigured (apiClient pattern). */
 export const translateValidation = (
   key: string,
@@ -20,79 +36,23 @@ export const translateValidation = (
 /** ajv reports the containing path for `required`; append the missing key. */
 const toFieldPath = (error: ErrorObject): string => {
   const base = error.instancePath.replace(/^\//, '').replace(/\//g, '.');
-
   if (error.keyword === 'required') {
     const missing = (error.params as { missingProperty?: string })
       .missingProperty;
-    if (missing) {
-      return base ? `${base}.${missing}` : missing;
-    }
+    return missing ? (base ? `${base}.${missing}` : missing) : base || ROOT_FIELD;
   }
-
   return base || ROOT_FIELD;
 };
 
-/** ajv keyword → learner message via i18next (French fallback + interpolation params). */
-const toMessage = (error: ErrorObject): string => {
-  const params = error.params as Record<string, unknown>;
-  const t = translateValidation;
-
-  switch (error.keyword) {
-    case 'required':
-      return t('required', 'Ce champ est requis.');
-    case 'type':
-      return t('type', `Type invalide (attendu : ${String(params.type ?? 'autre')}).`, {
-        type: params.type,
-      });
-    case 'enum':
-      return t('enum', 'Valeur non autorisée.');
-    case 'const':
-      return t('const', 'Valeur inattendue.');
-    case 'minLength':
-      return t('minLength', `Trop court (minimum ${String(params.limit)} caractères).`, {
-        limit: params.limit,
-      });
-    case 'maxLength':
-      return t('maxLength', `Trop long (maximum ${String(params.limit)} caractères).`, {
-        limit: params.limit,
-      });
-    case 'minItems':
-      return t('minItems', `Trop peu d’éléments (minimum ${String(params.limit)}).`, {
-        limit: params.limit,
-      });
-    case 'maxItems':
-      return t('maxItems', `Trop d’éléments (maximum ${String(params.limit)}).`, {
-        limit: params.limit,
-      });
-    case 'minimum':
-      return t('minimum', `Valeur trop petite (minimum ${String(params.limit)}).`, {
-        limit: params.limit,
-      });
-    case 'maximum':
-      return t('maximum', `Valeur trop grande (maximum ${String(params.limit)}).`, {
-        limit: params.limit,
-      });
-    case 'additionalProperties':
-      return t(
-        'additionalProperties',
-        `Propriété non autorisée : « ${String(params.additionalProperty)} ».`,
-        { property: params.additionalProperty },
-      );
-    case 'format':
-      return t('format', `Format invalide (${String(params.format)}).`, {
-        format: params.format,
-      });
-    default:
-      return error.message ?? t('fallback', 'Valeur invalide.');
-  }
-};
-
-/** ajv errors → `{ field: message }`, joining multiple messages per field. */
+/** ajv errors → `{ field: message }` (i18n + French fallback), joining messages per field. */
 export const mapAjvErrors = (errors: readonly ErrorObject[]): FieldErrors =>
   errors.reduce<FieldErrors>((accumulator, error) => {
     const field = toFieldPath(error);
-    const message = toMessage(error);
-
+    const message = translateValidation(
+      error.keyword,
+      FALLBACKS[error.keyword] ?? error.message ?? 'Valeur invalide.',
+      error.params as Record<string, unknown>,
+    );
     return {
       ...accumulator,
       [field]: accumulator[field]
