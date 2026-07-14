@@ -12,7 +12,13 @@ prototype activities with a single, data-driven path — no hand-authored front-
 **Blocked by:** 02 — feed + first publish (done); and **03b — seed sample activity content into CouchDB +
 browser read access**.
 
-**Status:** ready-for-agent
+**Status:** superseded
+
+> **Superseded by** 08 (client validator + first test harness) + 09 (render `multiple_choice` from CouchDB +
+> retire the prototype). This ticket bundled the shared scaffolding, the MC slice, the prototype removal, and
+> the new test harness into one oversized unit; it was re-sliced (see `webui-spec.md`). The other-interaction
+> tickets 05/06/07 now depend on 09, and the admin registry rewire is ticket 10. Do not implement this ticket
+> directly — work 08 → 09 → {05, 06, 07} / 10.
 
 - [ ] WebUI adds the `@le-cogito` feed to its `.npmrc` and installs the pinned package (the JSON Schemas +
       types — the shared validation artifact), plus `ajv` + `ajv-formats`.
