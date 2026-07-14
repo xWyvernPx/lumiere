@@ -15,19 +15,27 @@ variables:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '23.x'
+      versionSpec: '22.x'
     displayName: 'Install Node.js'
 
   - script: |
+      set -e
       corepack enable
-      corepack prepare pnpm@latest --activate
+      corepack prepare pnpm@10.26.1 --activate
     displayName: 'Enable Corepack & pnpm'
 
+  # Injects the Azure Artifacts credential into .npmrc so the @le-cogito scope
+  # (holds @le-cogito/lumiere-activity-schemas) can be fetched. The build
+  # service must have at least Reader on the feed. Must run before pnpm install.
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
+    displayName: 'Authenticate to Azure Artifacts'
+
   - script: |
-      pnpm config set store-dir $(pnpm_store_path)
-      # Use --recursive to ensure all sub-folders are installed
-      pnpm install --recursive --no-frozen-lockfile
-    displayName: 'Install Workspace Dependencies'
+      set -e
+      pnpm install --frozen-lockfile
+    displayName: 'Install Dependencies'
 
   - script: |
       pnpm run build
