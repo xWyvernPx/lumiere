@@ -1,0 +1,32 @@
+name: Sync to ADO
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Add ADO remote
+        run: |
+          git remote add ado https://dev.azure.com/${{ secrets.ADO_ORG }}/${{ secrets.ADO_PROJECT }}/_git/${{ secrets.ADO_REPO }}
+
+      - name: Push to ADO
+        run: |
+          git push ado main
+        env:
+          GIT_ASKPASS: echo
+          GIT_PASSWORD: ${{ secrets.ADO_PAT }}
