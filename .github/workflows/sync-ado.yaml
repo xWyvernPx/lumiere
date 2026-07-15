@@ -22,11 +22,9 @@ jobs:
 
       - name: Add ADO remote
         run: |
-          git remote add ado https://dev.azure.com/${{ secrets.ADO_ORG }}/${{ secrets.ADO_PROJECT }}/_git/${{ secrets.ADO_REPO }}
+          git remote remove ado >/dev/null 2>&1 || true
+          git remote add ado "https://oauth2:${{ secrets.ADO_PAT || vars.ADO_PAT }}@dev.azure.com/${{ secrets.ADO_ORG }}/${{ secrets.ADO_PROJECT }}/_git/${{ secrets.ADO_REPO }}"
 
       - name: Push to ADO
         run: |
           git push ado main
-        env:
-          GIT_ASKPASS: echo
-          GIT_PASSWORD: ${{ secrets.ADO_PAT }}
