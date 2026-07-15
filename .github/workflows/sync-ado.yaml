@@ -27,4 +27,4 @@ jobs:
 
       - name: Push to ADO
         run: |
-          git push ado main
+          git push ado main -f
