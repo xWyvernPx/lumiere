@@ -37,6 +37,7 @@ export default function PhonemeMatcher({ data, level }: Props) {
         
         mediaRecorder.ondataavailable = (event) => {
           // We could save the audio blob if we needed to play it back or upload
+          console.log("Audio data available:", event.data);
         };
 
         mediaRecorder.onstop = () => {

@@ -250,4 +250,17 @@ export const ACTIVITIES: ActivityMetadata[] = [
         "Écoutez attentivement la prononciation du mot cible. Observez le placement de la bouche et reproduisez le son avec précision.",
     },
   },
+  {
+    id: "activity-6",
+    title: "Defending a Thesis",
+    type: "SPEAKING",
+    description: "In exactly two minutes, defend the thesis that public transport should be free in all major metropolitan areas.",
+    level: "B2 Upper Intermediate",
+    format: "Speaking Practice",
+    tags: ["Speaking", "Subjunctive"],
+    data: {
+      prompt: "In exactly two minutes, defend the thesis that public transport should be free in all major metropolitan areas.",
+      context: "Focus on utilizing the subjunctive mood and formal rhetorical connectors."
+    }
+  }
 ];

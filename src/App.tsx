@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react";
 import {
   createRootRoute,
   createRoute,
@@ -6,16 +5,13 @@ import {
   RouterProvider,
   Outlet,
 } from "@tanstack/react-router";
+import { Suspense } from "react";
+import { lazy } from "react";
 
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
-
-// Eager: the landing page is the initial route (first paint), plus the small
-// always-mounted app shell. Everything else is code-split below.
-import LandingPage from "./pages/landing";
-import { GlobalTranslation } from "./components/shared/GlobalTranslation";
-import { Toaster } from "sonner";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { LoadingScreen } from "./components/shared/LoadingScreen";
 import { RouteFallback } from "./components/shared/RouteFallback";
 
 // Lazy: each route chunk loads on demand. Auth is split too so the Google /
@@ -44,10 +40,17 @@ const AdminActivitiesEditPage = lazy(() => import("./pages/admin/activities/edit
 const AdminOperationsPage = lazy(() => import("./pages/admin/operations"));
 const AdminAiSystemsPage = lazy(() => import("./pages/admin/ai-systems"));
 
+const LandingPage = lazy(() => import("./pages/landing"));
+
+import { GlobalTranslation } from "./components/shared/GlobalTranslation";
+
+import { Toaster } from "sonner";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 // 1. Declare the Root Route
 const rootRoute = createRootRoute({
   component: () => (
-    <>
+     <>
       <Suspense fallback={<RouteFallback fullScreen />}>
         <Outlet />
       </Suspense>
@@ -241,6 +244,12 @@ declare module "@tanstack/react-router" {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={() => setIsLoading(false)} />;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

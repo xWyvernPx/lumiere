@@ -27,7 +27,7 @@ export default function DeepArchive() {
   // Data for Comparative Linguistics tab
   const linguisticsCards = [
     {
-      id: 1,
+      id: "activity-1",
       code: 'LING_402',
       level: 'C1 Advanced',
       levelType: 'high',
@@ -39,7 +39,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 2,
+      id: "activity-2",
       code: 'LING_512',
       level: 'B2 Intermediate',
       levelType: 'medium',
@@ -50,7 +50,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 3,
+      id: "activity-3",
       code: 'LING_109',
       level: 'A2 Beginner',
       levelType: 'medium',
@@ -61,7 +61,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 4,
+      id: "activity-4",
       code: 'LING_667',
       level: 'C2 Mastery',
       levelType: 'high',
@@ -72,7 +72,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 5,
+      id: "activity-5",
       code: 'LING_440',
       level: 'C1 Advanced',
       levelType: 'high',
@@ -83,7 +83,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 6,
+      id: "activity-6",
       code: 'LING_222',
       level: 'B1 Intermediate',
       levelType: 'medium',
@@ -98,7 +98,7 @@ export default function DeepArchive() {
   // Mock Data for Certs tab
   const certCards = [
     {
-      id: 1,
+      id: "activity-1",
       code: 'DELF_B1',
       level: 'B1 Intermediate',
       levelType: 'medium',
@@ -110,7 +110,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 2,
+      id: "activity-2",
       code: 'DALF_C1',
       level: 'C1 Advanced',
       levelType: 'high',
@@ -121,7 +121,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 3,
+      id: "activity-3",
       code: 'TCF_CAN',
       level: 'All Levels',
       levelType: 'medium',
@@ -133,7 +133,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 4,
+      id: "activity-4",
       code: 'DELF_B2',
       level: 'B2 Intermediate',
       levelType: 'medium',
@@ -148,7 +148,7 @@ export default function DeepArchive() {
   // Mock Data for Topics tab
   const topicCards = [
     {
-      id: 1,
+      id: "activity-1",
       code: 'TOP_ENV',
       level: 'B2 Intermediate',
       levelType: 'medium',
@@ -160,7 +160,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 2,
+      id: "activity-2",
       code: 'TOP_TECH',
       level: 'C1 Advanced',
       levelType: 'high',
@@ -172,7 +172,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 3,
+      id: "activity-3",
       code: 'TOP_CULT',
       level: 'A2 Beginner',
       levelType: 'medium',
@@ -183,7 +183,7 @@ export default function DeepArchive() {
       ]
     },
     {
-      id: 4,
+      id: "activity-4",
       code: 'TOP_POL',
       level: 'B1 Intermediate',
       levelType: 'medium',
@@ -198,7 +198,9 @@ export default function DeepArchive() {
   const renderGrid = (cards: any[]) => (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-[#c4c7c7] border border-[#c4c7c7] overflow-hidden rounded-xl">
       {cards.map((card) => (
-        <div 
+        <Link 
+          to="/activity/$activityId"
+          params={{ activityId: card.id }}
           key={card.id}
           className="bg-white p-6 flex flex-col justify-between group hover:bg-[#f4f4f4] transition-all cursor-pointer active:scale-[0.98]"
         >
@@ -232,7 +234,7 @@ export default function DeepArchive() {
               </div>
             ))}
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
