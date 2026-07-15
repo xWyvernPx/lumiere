@@ -5,6 +5,7 @@ import ReadingSession from "../../components/activities/ReadingSession";
 import InteractiveContextClue from "../../components/activities/InteractiveContextClue";
 import TextReconstruction from "../../components/activities/TextReconstruction";
 import PhonemeMatcher from "../../components/activities/PhonemeMatcher";
+import SpeakingActivity from "../../components/activities/SpeakingActivity";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
@@ -37,6 +38,8 @@ export default function ActivityPage() {
       return <TextReconstruction data={activity.data} level={activity.level} />;
     case "PHONEME_MATCHER":
       return <PhonemeMatcher data={activity.data} level={activity.level} />;
+    case "SPEAKING":
+      return <SpeakingActivity data={activity.data} level={activity.level} />;
     default:
       return <div>Unsupported activity type</div>;
   }

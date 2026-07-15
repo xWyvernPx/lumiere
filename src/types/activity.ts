@@ -3,7 +3,8 @@ export type ActivityType =
   | "READING_SESSION"
   | "INTERACTIVE_CONTEXT_CLUE"
   | "TEXT_RECONSTRUCTION"
-  | "PHONEME_MATCHER";
+  | "PHONEME_MATCHER"
+  | "SPEAKING";
 
 export interface BaseActivityMetadata {
   id: string;
@@ -12,6 +13,7 @@ export interface BaseActivityMetadata {
   description: string;
   level: string; // e.g., 'A1', 'B2'
   format: string; // e.g., 'Multi-Visual', 'Reading Comprehension'
+  tags?: string[];
 }
 
 export interface MatchOption {
@@ -95,6 +97,11 @@ export interface PhonemeMatcherData {
   description: string;
 }
 
+export interface SpeakingActivityData {
+  prompt: string;
+  context?: string;
+}
+
 export type ActivityMetadata = BaseActivityMetadata &
   (
     | { type: "VISUAL_MATCHER"; data: VisualMatcherData }
@@ -102,4 +109,5 @@ export type ActivityMetadata = BaseActivityMetadata &
     | { type: "INTERACTIVE_CONTEXT_CLUE"; data: InteractiveContextClueData }
     | { type: "TEXT_RECONSTRUCTION"; data: TextReconstructionData }
     | { type: "PHONEME_MATCHER"; data: PhonemeMatcherData }
+    | { type: "SPEAKING"; data: SpeakingActivityData }
   );

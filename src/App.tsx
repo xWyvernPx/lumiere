@@ -7,7 +7,9 @@ import {
 } from "@tanstack/react-router";
 
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
+import { LoadingScreen } from "./components/shared/LoadingScreen";
 
 // Layout and Pages imports
 import AppLayout from "./components/layout/AppLayout";
@@ -235,6 +237,12 @@ declare module "@tanstack/react-router" {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={() => setIsLoading(false)} />;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
